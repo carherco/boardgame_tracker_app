@@ -1,0 +1,116 @@
+.admin-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+}
+
+@media (max-width: 500px) {
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-card {
+    padding: 30px;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.3rem;
+    color: var(--primary);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+}
+
+select.glass-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 15px;
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+  appearance: none;
+  cursor: pointer;
+}
+
+select.glass-select option {
+  background: #1e293b;
+  color: white;
+}
+
+.search-results {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.search-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.game-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.game-info strong {
+    font-size: 0.9rem;
+}
+
+.game-info span {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.btn-small {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.hint {
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: #64748b;
+    text-align: center;
+}

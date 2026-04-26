@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "http://localhost:8888/mamp/boardgame-tracker/api/public/index.php",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/uploads": {
+    "target": "http://localhost:8888/mamp/boardgame-tracker/api/public",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

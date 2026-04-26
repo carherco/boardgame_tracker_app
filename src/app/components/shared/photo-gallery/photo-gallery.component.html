@@ -1,0 +1,24 @@
+<div class="gallery-grid">
+  <div *ngFor="let photo of photos; let i = index" 
+       class="gallery-item" 
+       (click)="openLightbox(i)">
+    <img [src]="photo.photoUrl" [alt]="'Foto ' + (i+1)" loading="lazy">
+    <div class="overlay">
+      <i class="icon-expand"></i>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX MODAL -->
+<div class="lightbox" *ngIf="selectedPhotoIndex !== null" (click)="closeLightbox()">
+  <div class="lightbox-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeLightbox()">&times;</button>
+    <img [src]="photos[selectedPhotoIndex].photoUrl" class="main-image">
+    
+    <div class="lightbox-nav">
+      <button (click)="prevPhoto()" [disabled]="selectedPhotoIndex === 0">&lsaquo;</button>
+      <span class="counter">{{ selectedPhotoIndex + 1 }} / {{ photos.length }}</span>
+      <button (click)="nextPhoto()" [disabled]="selectedPhotoIndex === photos.length - 1">&rsaquo;</button>
+    </div>
+  </div>
+</div>

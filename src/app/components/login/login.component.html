@@ -1,0 +1,54 @@
+<div class="login-page">
+  <div class="glass-panel login-card">
+    <h2 class="title-gradient">Identifícate</h2>
+    <p class="description">Introduce tu teléfono de WhatsApp para acceder al grupo.</p>
+
+    <form (submit)="onIdentify()">
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="tel" 
+               [(ngModel)]="phone" 
+               name="phone" 
+               placeholder="Ej: 600000000" 
+               required 
+               autocomplete="tel"
+               [disabled]="step === 'register' || loading">
+      </div>
+
+      <div class="form-group fade-in" *ngIf="step === 'register'">
+        <label>Nombre Completo</label>
+        <input type="text" 
+               [(ngModel)]="name" 
+               name="name" 
+               placeholder="¿Cómo te llamas?" 
+               required 
+               autocomplete="name"
+               [disabled]="loading"
+               autofocus>
+        <p class="hint">No estás en nuestra lista, ¡queremos conocerte!</p>
+      </div>
+
+      <div class="form-group fade-in" *ngIf="step === 'register'">
+        <label>Tus 3 juegos favoritos</label>
+        <input type="text" 
+               [(ngModel)]="favoriteGames" 
+               name="favoriteGames" 
+               placeholder="Ej: Wingspan, Terraforming Mars, Catán" 
+               required 
+               [disabled]="loading">
+        <p class="hint">Esto nos ayuda a elegir qué llevar al evento.</p>
+      </div>
+
+
+      <p class="error" *ngIf="error">{{error}}</p>
+
+      <button type="submit" class="btn-primary w-full" [disabled]="loading">
+        <span *ngIf="!loading">{{ step === 'phone' ? 'Continuar' : 'Crear mi cuenta' }}</span>
+        <span *ngIf="loading" class="spinner-small"></span>
+      </button>
+    </form>
+
+    
+    <a routerLink="/" class="back-link">Volver al inicio</a>
+  </div>
+</div>

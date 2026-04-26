@@ -1,0 +1,69 @@
+<div class="event-page" *ngIf="!loading; else loader">
+  <div class="glass-panel event-header" *ngIf="event">
+    <div class="header-content">
+      <h1 class="title-gradient">{{event.title}}</h1>
+      <div class="event-info">
+        <span>📅 {{event.date}}</span>
+        <span>🕒 {{event.time}}</span>
+        <span *ngIf="event.location" class="location">
+          📍 <strong>{{event.location.name}}</strong>: {{event.location.address}}
+          <a [href]="'https://www.google.com/maps/search/?api=1&query=' + event.location.address" target="_blank" class="map-link">(Ver mapa)</a>
+        </span>
+      </div>
+
+    </div>
+    
+    <div class="action-zone">
+      <button *ngIf="user && !isSignedUp" class="btn-primary" (click)="onSignup()">Confirmar Asistencia</button>
+      <div *ngIf="user && isSignedUp" class="status-badge success">¡Te has apuntado! ✅</div>
+      <div *ngIf="!user" class="login-msg">
+        <p>Identifícate para apuntarte:</p>
+        <a [routerLink]="['/login']" [queryParams]="{ returnUrl: '/apuntarse/' + token }" class="btn-primary">Identificarse</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="details-grid" *ngIf="event">
+    <section class="attendees-card glass-panel">
+      <h2>Asistentes ({{event.attendees.length}})</h2>
+      <ul class="attendees-list">
+        <li *ngFor="let attendee of event.attendees">
+          <span class="avatar">{{attendee.name[0]}}</span>
+          <span class="name">{{attendee.name}}</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="plays-card glass-panel" *ngIf="event.sessions && event.sessions.length > 0">
+      <h2>Partidas Jugadas</h2>
+      <div class="session-list">
+        <div *ngFor="let session of event.sessions" class="session-entry">
+          <div class="game-info">
+            <span class="game-name">{{session.game.name}}</span>
+            <p *ngIf="session.notes" class="session-notes">"{{session.notes}}"</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- GALERÍA DE FOTOS (Crónica Visual) -->
+  <div class="gallery-container glass-panel" *ngIf="allPhotos.length > 0">
+    <h2>Crónica Visual</h2>
+    <app-photo-gallery [photos]="allPhotos"></app-photo-gallery>
+  </div>
+
+
+  <div class="not-found glass-panel" *ngIf="!event">
+    <h2>Evento no encontrado</h2>
+    <p>El enlace podría haber caducado o ser incorrecto.</p>
+    <a routerLink="/" class="btn-primary">Volver al inicio</a>
+  </div>
+</div>
+
+<ng-template #loader>
+  <div class="loader-container">
+    <div class="spinner"></div>
+  </div>
+</ng-template>

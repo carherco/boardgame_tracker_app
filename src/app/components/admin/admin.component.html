@@ -1,0 +1,57 @@
+<div class="admin-container">
+    <header class="section-header">
+        <h1 class="title-gradient">Panel de Administración</h1>
+        <button class="btn-primary" routerLink="/">Volver</button>
+    </header>
+
+    <div class="admin-grid">
+        <section class="glass-panel admin-card">
+            <h2>Crear Nueva Convocatoria</h2>
+            <form (submit)="onCreateEvent()">
+                <div class="form-group">
+                    <label>Título del Evento</label>
+                    <input type="text" [(ngModel)]="newEvent.title" name="title" placeholder="Ej: Noche de Eurogames" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="date" [(ngModel)]="newEvent.date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Hora</label>
+                        <input type="time" [(ngModel)]="newEvent.time" name="time" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Lugar del Evento</label>
+                    <select [(ngModel)]="newEvent.location_id" name="location" required class="glass-select">
+                        <option value="" disabled selected>-- Selecciona un lugar --</option>
+                        <option *ngFor="let loc of locations" [value]="loc.id">{{loc.name}} ({{loc.address}})</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary w-full">Publicar convocatoria</button>
+            </form>
+        </section>
+
+        <section class="glass-panel admin-card">
+            <h2>Gestión de Juegos (BGG)</h2>
+            <div class="search-bar">
+                <input type="text" [(ngModel)]="gameSearchQuery" placeholder="Buscar en BoardGameGeek..." (keyup.enter)="onSearchGames()">
+                <button class="btn-secondary" (click)="onSearchGames()">Buscar</button>
+            </div>
+
+            <div class="search-results" *ngIf="searchResults.length > 0">
+                <div *ngFor="let game of searchResults" class="search-item">
+                    <div class="game-info">
+                        <strong>{{game.name}}</strong>
+                        <span>({{game.year}})</span>
+                    </div>
+                    <button class="btn-small" (click)="onAddGame(game)">Añadir</button>
+                </div>
+            </div>
+            <p class="hint" *ngIf="searchResults.length === 0">Busca juegos para añadirlos a la base de datos local.</p>
+        </section>
+    </div>
+</div>

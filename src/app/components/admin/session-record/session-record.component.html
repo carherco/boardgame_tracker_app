@@ -1,0 +1,99 @@
+<div class="session-container glass">
+  <header class="header">
+    <h2>Registro de Partida</h2>
+    <p class="subtitle" *ngIf="activeEvent">Evento: <strong>{{ activeEvent.title }}</strong> ({{ activeEvent.date | date:'dd/MM/yyyy' }})</p>
+  </header>
+
+  <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
+    <!-- ETAPA 1: SELECCIÓN DE JUEGO -->
+    <section class="step-card">
+      <div class="step-header">
+        <span class="step-num">1</span>
+        <h3>Seleccionar Juego</h3>
+      </div>
+      
+      <div class="game-selector">
+        <input type="text" placeholder="Buscar juego en catálogo local..." formControlName="gameSearch" class="input-modern">
+        <button type="button" class="btn-secondary" (click)="openBggSearch()">
+          <i class="icon-search"></i> Buscar en BGG
+        </button>
+      </div>
+
+      <div class="selected-game-preview" *ngIf="selectedGame">
+        <img [src]="selectedGame.imageUrl || 'assets/placeholder-game.png'" alt="Juego">
+        <div class="game-info">
+          <h4>{{ selectedGame.name }}</h4>
+          <span class="badge">Seleccionado</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ETAPA 2: ASISTENTES (QUIÉN JUGÓ) -->
+    <section class="step-card" *ngIf="activeEvent">
+      <div class="step-header">
+        <span class="step-num">2</span>
+        <h3>¿Quiénes han jugado?</h3>
+      </div>
+      
+      <div class="attendees-grid">
+        <div *ngFor="let attendee of activeEvent.attendees" 
+             class="attendee-chip" 
+             [class.selected]="isSelected(attendee.id)"
+             (click)="toggleAttendee(attendee.id)">
+          <div class="avatar">{{ attendee.name.charAt(0) }}</div>
+          <span>{{ attendee.name }}</span>
+        </div>
+      </div>
+      <p class="helper-text" *ngIf="activeEvent.attendees.length === 0">No hay asistentes registrados para este evento.</p>
+    </section>
+
+    <!-- ETAPA 3: NOTAS Y FOTOS -->
+    <section class="step-card">
+      <div class="step-header">
+        <span class="step-num">3</span>
+        <h3>Detalles opcionales</h3>
+      </div>
+
+      <textarea formControlName="notes" placeholder="Escribe aquí notas sobre la partida (momentos épicos, anécdotas...)" class="input-modern notes-area"></textarea>
+
+      <div class="photo-upload">
+        <label for="photos" class="upload-label">
+          <i class="icon-camera"></i> Subir Fotos
+          <input type="file" id="photos" multiple (change)="onFileChange($event)" hidden>
+        </label>
+        <div class="photo-previews">
+          <div *ngFor="let p of photoPreviews" class="preview-thumb">
+            <img [src]="p" alt="Preview">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button type="submit" class="btn-primary" [disabled]="!sessionForm.valid || selectedPlayerIds.length === 0 || !selectedGame">
+        Guardar Partida
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- MODAL BGG SEARCH -->
+<div class="modal-overlay" *ngIf="showBggModal">
+  <div class="modal-content glass">
+    <h3>Buscador BoardGameGeek</h3>
+    <div class="search-bar">
+      <input type="text" #bggInput (keyup.enter)="searchBgg(bggInput.value)" placeholder="Nombre del juego..." class="input-modern">
+      <button (click)="searchBgg(bggInput.value)" class="btn-primary">Buscar</button>
+    </div>
+
+    <div class="bgg-results">
+      <div *ngFor="let item of bggResults" (click)="importGame(item)" class="bgg-item">
+        <span class="game-name">{{ item.name }}</span>
+        <span class="game-year">{{ item.year }}</span>
+      </div>
+      <div *ngIf="isSearchingBgg" class="loader"></div>
+    </div>
+
+    <button class="btn-text" (click)="showBggModal = false">Cancelar</button>
+  </div>
+</div>
