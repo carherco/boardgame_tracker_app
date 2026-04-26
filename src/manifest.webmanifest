@@ -1,7 +1,7 @@
 {
-  "name": "tracker-app",
-  "short_name": "tracker-app",
-  "theme_color": "#1976d2",
+  "name": "BoardGame Tracker",
+  "short_name": "BG Tracker",
+  "theme_color": "#f16a22",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
