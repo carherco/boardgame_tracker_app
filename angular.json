@@ -47,7 +47,7 @@
               ],
               "outputHashing": "all",
               "serviceWorker": "ngsw-config.json",
-              "baseHref": "/boardgame-tracker/"
+              "baseHref": "/boardgametracker/"
             },
             "development": {
               "optimization": false,
