@@ -54,13 +54,23 @@ export class EventDetailComponent implements OnInit {
         if (session.photos) {
           session.photos.forEach((photo: any) => {
             this.allPhotos.push({
-              photoUrl: photo.photoUrl,
+              photoUrl: this.formatPhotoUrl(photo.photoUrl),
               notes: session.notes
             });
           });
         }
       });
     }
+  }
+
+  formatPhotoUrl(url: string): string {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    
+    // Si la URL empieza por /uploads, le ponemos el prefijo de la API
+    // En producción environment.apiUrl es 'https://carherco.es/boardgametracker/api'
+    const baseUrl = this.api.getBaseUrl();
+    return `${baseUrl}${url}`;
   }
 
 

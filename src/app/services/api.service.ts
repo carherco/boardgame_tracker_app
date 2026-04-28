@@ -12,6 +12,11 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+  getBaseUrl(): string {
+    return this.apiUrl;
+  }
+
+
   identify(phone: string, name?: string, favoriteGames?: string): Observable<Player | { status: string }> {
     return this.http.post<Player | { status: string }>(`${this.apiUrl}/identify`, { phone, name, favoriteGames });
   }
