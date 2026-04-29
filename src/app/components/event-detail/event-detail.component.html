@@ -58,6 +58,11 @@
           <div class="game-info">
             <span class="game-name">{{session.game.name}}</span>
             <p *ngIf="session.notes" class="session-notes">"{{session.notes}}"</p>
+            <div class="session-players" *ngIf="session.players?.length > 0">
+              <span *ngFor="let player of session.players" class="player-chip">
+                {{player.name}}
+              </span>
+            </div>
           </div>
         </div>
       </div>
