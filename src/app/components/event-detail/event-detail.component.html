@@ -3,8 +3,8 @@
     <div class="header-content">
       <h1 class="title-gradient">{{event.title}}</h1>
       <div class="event-info">
-        <span>📅 {{event.date}}</span>
-        <span>🕒 {{event.time}}</span>
+        <span>📅 {{event.date | date:'dd/MM/yyyy'}}</span>
+        <span>🕒 {{event.time | date:'HH:mm'}}</span>
         <span *ngIf="event.location" class="location">
           📍 <strong>{{event.location.name}}</strong>: {{event.location.address}}
           <a [href]="'https://www.google.com/maps/search/?api=1&query=' + event.location.address" target="_blank" class="map-link">(Ver mapa)</a>

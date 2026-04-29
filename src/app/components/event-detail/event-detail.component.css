@@ -56,14 +56,19 @@
 .header-content h1 {
   margin: 0 0 10px 0;
   font-size: 2.5rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .event-info {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 15px 20px;
   color: #94a3b8;
   font-size: 1.1rem;
 }
+
 
 .status-badge {
   padding: 10px 20px;
@@ -86,6 +91,19 @@
 @media (max-width: 768px) {
   .details-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .event-header {
+    padding: 25px;
+  }
+
+  .header-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .event-info {
+    font-size: 1rem;
+    gap: 10px;
   }
 }
 
@@ -117,6 +135,9 @@ h2 {
   margin-top: 10px;
   line-height: 1.4;
   display: block !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .map-link {
