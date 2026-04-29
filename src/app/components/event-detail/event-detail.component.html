@@ -26,11 +26,27 @@
 
   <div class="details-grid" *ngIf="event">
     <section class="attendees-card glass-panel">
-      <h2>Asistentes ({{event.attendees.length}})</h2>
+      <h2>Asistentes ({{event.signups?.length || 0}})</h2>
       <ul class="attendees-list">
-        <li *ngFor="let attendee of event.attendees">
-          <span class="avatar">{{attendee.name[0]}}</span>
-          <span class="name">{{attendee.name}}</span>
+        <li *ngFor="let signup of event.signups" [class.checked-in]="signup.checkedIn">
+          <span class="avatar" [class.avatar-checked]="signup.checkedIn">
+            {{signup.player.name[0]}}
+          </span>
+          <div class="attendee-info">
+            <span class="name">{{signup.player.name}}</span>
+            <span class="checkin-time" *ngIf="signup.checkedIn">
+              ✅ Llegó a las {{signup.checkedInAt | date:'HH:mm'}}
+            </span>
+            <span class="pending-label" *ngIf="!signup.checkedIn">⏳ Pendiente</span>
+          </div>
+          <button
+            *ngIf="auth.isAdmin()"
+            class="checkin-btn"
+            [class.checked]="signup.checkedIn"
+            [disabled]="checkingIn === signup.player.phone"
+            (click)="onCheckIn(signup.player.phone)">
+            {{ signup.checkedIn ? 'Deshacer' : 'Check-in' }}
+          </button>
         </li>
       </ul>
     </section>

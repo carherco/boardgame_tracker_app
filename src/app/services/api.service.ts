@@ -52,6 +52,14 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/events/${token}/signup`, { phone });
   }
 
+  checkIn(token: string, adminPhone: string, playerPhone: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/events/${token}/checkin`, {
+      admin_phone: adminPhone,
+      player_phone: playerPhone
+    });
+  }
+
+
   searchBgg(query: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/games/search?q=${query}`);
   }

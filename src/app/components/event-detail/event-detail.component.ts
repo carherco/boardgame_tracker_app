@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
-import { Event, Player, PlaySession } from '../../models/interfaces';
+import { Player } from '../../models/interfaces';
 import { PhotoGalleryComponent, GalleryPhoto } from '../shared/photo-gallery/photo-gallery.component';
 
 @Component({
@@ -15,12 +15,12 @@ import { PhotoGalleryComponent, GalleryPhoto } from '../shared/photo-gallery/pho
 })
 export class EventDetailComponent implements OnInit {
   token: string = '';
-  event: any | null = null; // Changed from Event to any to handle nested sessions/photos
+  event: any | null = null;
   allPhotos: GalleryPhoto[] = [];
   user: Player | null = null;
   isSignedUp: boolean = false;
   loading: boolean = true;
-
+  checkingIn: string | null = null; // phone of the player being checked in
 
   constructor(
     private route: ActivatedRoute,
@@ -66,17 +66,16 @@ export class EventDetailComponent implements OnInit {
   formatPhotoUrl(url: string): string {
     if (!url) return '';
     if (url.startsWith('http')) return url;
-    
-    // Si la URL empieza por /uploads, le ponemos el prefijo de la API
-    // En producción environment.apiUrl es 'https://carherco.es/boardgametracker/api'
     const baseUrl = this.api.getBaseUrl();
     return `${baseUrl}${url}`;
   }
 
-
   checkSignup() {
-    if (this.user && this.event) {
-      this.isSignedUp = this.event.attendees.some((a: Player) => a.phone === this.user?.phone);
+    if (this.user && this.event?.signups) {
+      // The signups array now contains objects with a player property
+      this.isSignedUp = this.event.signups.some(
+        (s: any) => s.player?.phone === this.user?.phone
+      );
     }
   }
 
@@ -84,6 +83,18 @@ export class EventDetailComponent implements OnInit {
     if (!this.user) return;
     this.api.signupToEvent(this.token, this.user.phone).subscribe(() => {
       this.loadEvent();
+    });
+  }
+
+  onCheckIn(playerPhone: string) {
+    if (!this.user || !this.auth.isAdmin()) return;
+    this.checkingIn = playerPhone;
+    this.api.checkIn(this.token, this.user.phone, playerPhone).subscribe({
+      next: () => {
+        this.checkingIn = null;
+        this.loadEvent(); // Reload to get updated state
+      },
+      error: () => this.checkingIn = null
     });
   }
 }

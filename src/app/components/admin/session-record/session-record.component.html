@@ -36,15 +36,15 @@
       </div>
       
       <div class="attendees-grid">
-        <div *ngFor="let attendee of activeEvent.attendees" 
+        <div *ngFor="let signup of activeEvent.signups" 
              class="attendee-chip" 
-             [class.selected]="isSelected(attendee.id)"
-             (click)="toggleAttendee(attendee.id)">
-          <div class="avatar">{{ attendee.name.charAt(0) }}</div>
-          <span>{{ attendee.name }}</span>
+             [class.selected]="isSelected(signup.player.id)"
+             (click)="toggleAttendee(signup.player.id)">
+          <div class="avatar">{{ signup.player.name.charAt(0) }}</div>
+          <span>{{ signup.player.name }}</span>
         </div>
       </div>
-      <p class="helper-text" *ngIf="activeEvent.attendees.length === 0">No hay asistentes registrados para este evento.</p>
+      <p class="helper-text" *ngIf="activeEvent.signups.length === 0">No hay asistentes registrados para este evento.</p>
     </section>
 
     <!-- ETAPA 3: NOTAS Y FOTOS -->

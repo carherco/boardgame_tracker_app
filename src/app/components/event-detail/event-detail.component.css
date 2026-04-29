@@ -157,6 +157,70 @@ h2 {
   gap: 15px;
   padding: 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.2s;
+}
+
+.attendees-list li.checked-in {
+  background: rgba(34, 197, 94, 0.05);
+  border-radius: 8px;
+  padding-left: 8px;
+  border-bottom-color: rgba(34, 197, 94, 0.1);
+}
+
+.avatar-checked {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+}
+
+.attendee-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.checkin-time {
+  font-size: 0.78rem;
+  color: #4ade80;
+}
+
+.pending-label {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+/* Check-in button */
+.checkin-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(99, 102, 241, 0.1);
+  color: #818cf8;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.checkin-btn:hover {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.7);
+}
+
+.checkin-btn.checked {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+}
+
+.checkin-btn.checked:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.checkin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .avatar {

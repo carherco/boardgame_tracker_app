@@ -23,6 +23,14 @@ export interface Game {
   imageUrl?: string;
 }
 
+export interface EventSignup {
+  id: number;
+  player: Player;
+  checkedIn: boolean;
+  checkedInAt?: string;
+  signedUpAt: string;
+}
+
 export interface Event {
   id: number;
   title: string;
@@ -30,7 +38,7 @@ export interface Event {
   time: string;
   shareToken: string;
   status: 'open' | 'closed';
-  attendees: Player[];
+  signups: EventSignup[];
   location?: Location;
 }
 
