@@ -5,6 +5,8 @@ import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { Event, Player } from '../../models/interfaces';
 
+import { NotificationService } from '../../services/notification.service';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -19,7 +21,16 @@ export class DashboardComponent implements OnInit {
   personalStats: any = null;
   loading: boolean = true;
 
-  constructor(private api: ApiService, public auth: AuthService) {}
+  constructor(
+    private api: ApiService, 
+    public auth: AuthService,
+    private notifications: NotificationService
+  ) {}
+
+  requestNotifications() {
+    this.notifications.subscribeToNotifications();
+  }
+
 
   ngOnInit(): void {
     this.user = this.auth.getCurrentUser();

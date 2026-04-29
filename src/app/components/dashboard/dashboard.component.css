@@ -184,3 +184,41 @@
   text-align: center;
   color: #94a3b8;
 }
+
+/* NOTIFICATIONS BANNER */
+.notification-banner {
+  margin: 1.5rem 0;
+  padding: 1.2rem 1.5rem;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.banner-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.banner-text h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.banner-text p {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.banner-content .btn-secondary {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .banner-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}

@@ -43,6 +43,17 @@
     </div>
   </section>
 
+  <!-- NOTIFICACIONES -->
+  <section class="notification-banner glass-panel" *ngIf="user">
+    <div class="banner-content">
+      <div class="banner-text">
+        <h3>🔔 Mantente al día</h3>
+        <p>¿Quieres que te avisemos cuando se publique un nuevo evento?</p>
+      </div>
+      <button class="btn-secondary" (click)="requestNotifications()">Activar Avisos</button>
+    </div>
+  </section>
+
   <!-- LISTA DE EVENTOS -->
   <section class="events-section">
     <h2 class="section-title">Próximas Quedadas</h2>
