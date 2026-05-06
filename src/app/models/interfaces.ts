@@ -21,6 +21,12 @@ export interface Game {
   bggId?: number;
   bggUrl?: string;
   imageUrl?: string;
+  minPlayers?: number;
+  maxPlayers?: number;
+  bestPlayers?: string;
+  recommendedPlayers?: string;
+  playingTime?: number;
+  complexity?: number;
 }
 
 export interface EventSignup {

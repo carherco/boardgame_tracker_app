@@ -56,7 +56,14 @@
       <div class="session-list">
         <div *ngFor="let session of event.sessions" class="session-entry">
           <div class="game-info">
-            <span class="game-name">{{session.game.name}}</span>
+            <div class="game-header">
+              <span class="game-name">{{session.game.name}}</span>
+              <div class="game-stats" *ngIf="session.game.complexity">
+                <span class="stat-item" title="Tiempo de juego">🕒 {{session.game.playingTime}}'</span>
+                <span class="stat-item" title="Complejidad">⚖️ {{session.game.complexity | number:'1.1-1'}}</span>
+                <span class="stat-item" title="Mejor con..." *ngIf="session.game.bestPlayers">⭐ {{session.game.bestPlayers}}</span>
+              </div>
+            </div>
             <p *ngIf="session.notes" class="session-notes">"{{session.notes}}"</p>
             <div class="session-players" *ngIf="session.players?.length > 0">
               <span *ngFor="let player of session.players" class="player-chip">
