@@ -60,6 +60,11 @@ export class ApiService {
   }
 
 
+  getGames(): Observable<Game[]> {
+    return this.http.get<Game[]>(`${this.apiUrl}/games`);
+  }
+
+
   searchBgg(query: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/games/search?q=${query}`);
   }

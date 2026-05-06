@@ -1,0 +1,91 @@
+<div class="library-container">
+  <header class="page-header">
+    <h1>Ludoteca</h1>
+    <div class="header-stats">
+      <span class="count-badge">{{filteredGames.length}}</span>
+      <span class="count-label">juegos</span>
+    </div>
+  </header>
+
+  <!-- Panel de Filtros -->
+  <section class="filters-panel">
+    <div class="search-row">
+      <div class="input-wrapper">
+        <span class="input-icon">🔍</span>
+        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()" placeholder="¿A qué quieres jugar hoy?">
+      </div>
+    </div>
+    
+    <div class="filters-row">
+      <div class="filter-item">
+        <label>Personas</label>
+        <div class="select-pill">
+          <select [(ngModel)]="playerCount" (change)="applyFilters()">
+            <option [ngValue]="null">Todas</option>
+            <option *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]" [ngValue]="n">{{n}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-item">
+        <label>Tiempo máx</label>
+        <div class="range-display">{{maxTime ? maxTime + 'm' : '∞'}}</div>
+        <input type="range" min="15" max="240" step="15" [(ngModel)]="maxTime" (ngModelChange)="applyFilters()">
+      </div>
+
+      <div class="filter-item">
+        <label>Dificultad máx</label>
+        <div class="range-display">{{maxComplexity ? maxComplexity : '∞'}}</div>
+        <input type="range" min="1" max="5" step="0.5" [(ngModel)]="maxComplexity" (ngModelChange)="applyFilters()">
+      </div>
+    </div>
+    
+    <button class="btn-clear" *ngIf="searchTerm || playerCount || maxTime || maxComplexity" (click)="resetFilters()">
+      Borrar filtros
+    </button>
+  </section>
+
+  <!-- Estado de carga -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Desempolvando la estantería...</p>
+  </div>
+
+  <!-- Lista de Juegos -->
+  <div class="game-grid" *ngIf="!loading">
+    <div class="game-card" *ngFor="let game of filteredGames">
+      <div class="card-inner">
+        <div class="game-img-container">
+          <img [src]="game.imageUrl || 'https://placehold.co/400x400/1e293b/white?text=' + game.name" [alt]="game.name">
+          <div class="game-complexity" *ngIf="game.complexity" [style.backgroundColor]="getComplexityColor(game.complexity)">
+            {{game.complexity.toFixed(1)}}
+          </div>
+        </div>
+        <div class="game-details">
+          <h3>{{game.name}}</h3>
+          <div class="meta-pills">
+            <span class="pill">
+              <span class="pill-icon">👥</span>
+              {{game.minPlayers === game.maxPlayers ? game.minPlayers : game.minPlayers + '-' + game.maxPlayers}}
+            </span>
+            <span class="pill" *ngIf="game.playingTime">
+              <span class="pill-icon">⏱️</span>
+              {{game.playingTime}}'
+            </span>
+            <span class="pill best" *ngIf="game.bestPlayers">
+              <span class="pill-icon">⭐</span>
+              {{game.bestPlayers}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sin resultados -->
+  <div class="no-results" *ngIf="!loading && filteredGames.length === 0">
+    <span class="big-icon">🤷‍♂️</span>
+    <p>No hay ningún juego que cumpla esos criterios.</p>
+    <button class="btn-primary" (click)="resetFilters()">Ver todos los juegos</button>
+  </div>
+</div>
