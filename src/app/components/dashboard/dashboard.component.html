@@ -66,7 +66,7 @@
         <div class="event-main">
           <h3>{{event.title}}</h3>
           <p class="location" *ngIf="event.location">📍 {{event.location.name}}</p>
-          <div class="attendees-count">👥 {{event.signups?.length || 0}} asistentes</div>
+          <div class="attendees-count">👥 {{event.signups.length}} asistentes</div>
         </div>
       </div>
     </div>
