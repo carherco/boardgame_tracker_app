@@ -1,8 +1,8 @@
 .dashboard-container {
   padding: 1.5rem;
-  max-width: 600px; /* Limite para que en escritorio no se estire demasiado y mantenga aspecto móvil */
+  max-width: 600px;
   margin: 0 auto;
-  padding-bottom: 5rem; /* Espacio para el FAB */
+  padding-bottom: 5rem;
 }
 
 .main-header {
@@ -172,11 +172,6 @@
   margin-top: 2rem;
   padding: 2rem;
   text-align: center;
-}
-
-.login-prompt p {
-  margin-bottom: 1.5rem;
-  color: #94a3b8;
 }
 
 .no-events {

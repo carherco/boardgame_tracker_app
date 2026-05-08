@@ -69,7 +69,6 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 2px 9px;
-  letter-spacing: 0.02em;
 }
 
 .gallery-container {
@@ -98,8 +97,6 @@
 .header-content h1 {
   margin: 0 0 10px 0;
   font-size: 2.5rem;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
   word-break: break-word;
 }
 
@@ -110,7 +107,6 @@
   color: #94a3b8;
   font-size: 1.1rem;
 }
-
 
 .status-badge {
   padding: 10px 20px;
@@ -128,25 +124,6 @@
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   gap: 30px;
-}
-
-@media (max-width: 768px) {
-  .details-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .event-header {
-    padding: 25px;
-  }
-
-  .header-content h1 {
-    font-size: 1.8rem;
-  }
-
-  .event-info {
-    font-size: 1rem;
-    gap: 10px;
-  }
 }
 
 .attendees-card, .plays-card {
@@ -167,18 +144,10 @@ h2 {
   margin: 0;
 }
 
-.attend.event-info span {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .location {
   margin-top: 10px;
   line-height: 1.4;
   display: block !important;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
   word-break: break-word;
 }
 
@@ -189,24 +158,18 @@ h2 {
   margin-left: 5px;
 }
 
-.map-link:hover {
-  color: #818cf8;
-}
-
 .attendees-list li {
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 12px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-  transition: background 0.2s;
 }
 
 .attendees-list li.checked-in {
   background: rgba(34, 197, 94, 0.05);
   border-radius: 8px;
   padding-left: 8px;
-  border-bottom-color: rgba(34, 197, 94, 0.1);
 }
 
 .avatar-checked {
@@ -230,7 +193,6 @@ h2 {
   color: #64748b;
 }
 
-/* Check-in button */
 .checkin-btn {
   padding: 6px 12px;
   border-radius: 20px;
@@ -243,26 +205,10 @@ h2 {
   transition: all 0.2s;
 }
 
-.checkin-btn:hover {
-  background: rgba(99, 102, 241, 0.25);
-  border-color: rgba(99, 102, 241, 0.7);
-}
-
 .checkin-btn.checked {
   border-color: rgba(34, 197, 94, 0.4);
   background: rgba(34, 197, 94, 0.1);
   color: #4ade80;
-}
-
-.checkin-btn.checked:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #f87171;
-}
-
-.checkin-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .avatar {
@@ -283,22 +229,9 @@ h2 {
   padding: 40px 0;
 }
 
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 50vh;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+@media (max-width: 768px) {
+  .details-grid { grid-template-columns: 1fr; }
+  .event-header { padding: 25px; }
+  .header-content h1 { font-size: 1.8rem; }
+  .event-info { font-size: 1rem; gap: 10px; }
 }
