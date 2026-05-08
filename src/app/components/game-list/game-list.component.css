@@ -337,3 +337,34 @@ input[type="checkbox"]:checked + .toggle-slider::before {
   border: 1px solid rgba(255, 255, 255, 0.1);
   letter-spacing: 0.5px;
 }
+
+.ownership-info {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.owner-list, .location-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.owner-tag {
+  font-size: 0.65rem;
+  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.location-tag {
+  font-size: 0.65rem;
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+}

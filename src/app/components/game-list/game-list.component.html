@@ -90,6 +90,16 @@
               {{game.bestPlayers}}
             </span>
           </div>
+          
+          <!-- Dueños y Sedes -->
+          <div class="ownership-info" *ngIf="(game.owners && game.owners.length > 0) || (game.locations && game.locations.length > 0)">
+            <div class="owner-list" *ngIf="game.owners && game.owners.length > 0">
+              <span class="owner-tag" *ngFor="let owner of game.owners">👤 {{owner.name}}</span>
+            </div>
+            <div class="location-list" *ngIf="game.locations && game.locations.length > 0">
+              <span class="location-tag" *ngFor="let loc of game.locations">📍 {{loc.name}}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

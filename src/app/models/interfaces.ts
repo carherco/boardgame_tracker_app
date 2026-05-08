@@ -28,6 +28,8 @@ export interface Game {
   playingTime?: number;
   complexity?: number;
   itemType?: string;
+  owners?: Player[];
+  locations?: Location[];
 }
 
 export interface EventSignup {
