@@ -27,6 +27,7 @@ export interface Game {
   recommendedPlayers?: string;
   playingTime?: number;
   complexity?: number;
+  itemType?: string;
 }
 
 export interface EventSignup {

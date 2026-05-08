@@ -39,8 +39,18 @@
         <input type="range" min="1" max="5" step="0.5" [(ngModel)]="maxComplexity" (ngModelChange)="applyFilters()">
       </div>
     </div>
+
+    <div class="filters-row secondary">
+      <div class="filter-item-toggle">
+        <label class="toggle-container">
+          <input type="checkbox" [(ngModel)]="showExpansions" (change)="applyFilters()">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Mostrar expansiones</span>
+        </label>
+      </div>
+    </div>
     
-    <button class="btn-clear" *ngIf="searchTerm || playerCount || maxTime || maxComplexity" (click)="resetFilters()">
+    <button class="btn-clear" *ngIf="searchTerm || playerCount || maxTime || maxComplexity || showExpansions" (click)="resetFilters()">
       Borrar filtros
     </button>
   </section>
@@ -59,6 +69,9 @@
           <img [src]="game.imageUrl || 'https://placehold.co/400x400/1e293b/white?text=' + game.name" [alt]="game.name">
           <div class="game-complexity" *ngIf="game.complexity" [style.backgroundColor]="getComplexityColor(game.complexity)">
             {{game.complexity.toFixed(1)}}
+          </div>
+          <div class="expansion-badge" *ngIf="game.itemType === 'expansion'">
+            EXP
           </div>
         </div>
         <div class="game-details">

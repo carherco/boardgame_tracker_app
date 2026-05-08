@@ -19,6 +19,7 @@ export class GameListComponent implements OnInit {
   playerCount: number | null = null;
   maxTime: number | null = null;
   maxComplexity: number | null = null;
+  showExpansions: boolean = false;
 
   loading: boolean = true;
 
@@ -58,6 +59,11 @@ export class GameListComponent implements OnInit {
         return false;
       }
 
+      // Expansion filter
+      if (!this.showExpansions && game.itemType === 'expansion') {
+        return false;
+      }
+
       return true;
     });
 
@@ -77,6 +83,7 @@ export class GameListComponent implements OnInit {
     this.playerCount = null;
     this.maxTime = null;
     this.maxComplexity = null;
+    this.showExpansions = false;
     this.applyFilters();
   }
 }
