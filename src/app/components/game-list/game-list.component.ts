@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
-import { Game } from '../../models/interfaces';
+import { Game, Player, GameLocation } from '../../models/interfaces';
 
 @Component({
   selector: 'app-game-list',
@@ -20,6 +20,11 @@ export class GameListComponent implements OnInit {
   maxTime: number | null = null;
   maxComplexity: number | null = null;
   showExpansions: boolean = false;
+  
+  players: Player[] = [];
+  locations: GameLocation[] = [];
+  selectedPlayerId: number | null = null;
+  selectedLocationId: number | null = null;
 
   loading: boolean = true;
 
@@ -34,6 +39,9 @@ export class GameListComponent implements OnInit {
       },
       error: () => this.loading = false
     });
+
+    this.api.getPlayers().subscribe(data => this.players = data);
+    this.api.getLocations().subscribe(data => this.locations = data);
   }
 
   applyFilters() {
@@ -64,6 +72,16 @@ export class GameListComponent implements OnInit {
         return false;
       }
 
+      // Player filter
+      if (this.selectedPlayerId) {
+        if (!game.owners || !game.owners.some(o => o.id === this.selectedPlayerId)) return false;
+      }
+
+      // Location filter
+      if (this.selectedLocationId) {
+        if (!game.locations || !game.locations.some(l => l.id === this.selectedLocationId)) return false;
+      }
+
       return true;
     });
 
@@ -84,6 +102,8 @@ export class GameListComponent implements OnInit {
     this.maxTime = null;
     this.maxComplexity = null;
     this.showExpansions = false;
+    this.selectedPlayerId = null;
+    this.selectedLocationId = null;
     this.applyFilters();
   }
 }

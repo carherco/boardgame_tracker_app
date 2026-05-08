@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Player, Game, Event, Location } from '../models/interfaces';
+import { Player, Game, Event, GameLocation } from '../models/interfaces';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -26,8 +26,12 @@ export class ApiService {
     return this.http.get<Event[]>(`${this.apiUrl}/events`);
   }
 
-  getLocations(): Observable<Location[]> {
-    return this.http.get<Location[]>(`${this.apiUrl}/locations`);
+  getPlayers(): Observable<Player[]> {
+    return this.http.get<Player[]>(`${this.apiUrl}/players`);
+  }
+
+  getLocations(): Observable<GameLocation[]> {
+    return this.http.get<GameLocation[]>(`${this.apiUrl}/locations`);
   }
 
   getGlobalStats(): Observable<any> {

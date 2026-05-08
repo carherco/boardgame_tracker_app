@@ -1,6 +1,6 @@
 // app/src/app/models/interfaces.ts
 
-export interface Location {
+export interface GameLocation {
   id: number;
   name: string;
   address: string;
@@ -29,7 +29,7 @@ export interface Game {
   complexity?: number;
   itemType?: string;
   owners?: Player[];
-  locations?: Location[];
+  locations?: GameLocation[];
 }
 
 export interface EventSignup {
@@ -48,7 +48,7 @@ export interface Event {
   shareToken: string;
   status: 'open' | 'closed';
   signups: EventSignup[];
-  location?: Location;
+  location?: GameLocation;
 }
 
 

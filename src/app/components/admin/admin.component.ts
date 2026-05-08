@@ -5,7 +5,7 @@ import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
-import { Location } from '../../models/interfaces';
+import { GameLocation } from '../../models/interfaces';
 
 @Component({
   selector: 'app-admin',
@@ -16,7 +16,7 @@ import { Location } from '../../models/interfaces';
 })
 export class AdminComponent implements OnInit {
   newEvent = { title: '', date: '', time: '', location_id: '' };
-  locations: Location[] = [];
+  locations: GameLocation[] = [];
   gameSearchQuery: string = '';
   searchResults: any[] = [];
   
