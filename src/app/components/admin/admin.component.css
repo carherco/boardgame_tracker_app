@@ -114,3 +114,61 @@ select.glass-select option {
     color: #64748b;
     text-align: center;
 }
+
+/* Player Management */
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.player-admin-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.player-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.phone {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.player-extra {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+.players-compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.player-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.pending-tag {
+    border-color: rgba(234, 179, 8, 0.4);
+    color: #eab308;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}

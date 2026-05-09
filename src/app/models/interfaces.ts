@@ -11,6 +11,7 @@ export interface Player {
   name: string;
   phone: string;
   isAdmin: boolean;
+  isApproved: boolean;
   favoriteGames?: string;
 }
 

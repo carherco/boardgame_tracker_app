@@ -16,11 +16,35 @@
     <div class="action-zone">
       <button *ngIf="user && !isSignedUp" class="btn-primary" (click)="onSignup()">Confirmar Asistencia</button>
       <div *ngIf="user && isSignedUp" class="status-badge success">¡Te has apuntado! ✅</div>
+      
+      <!-- QR y Compartir para Admins -->
+      <div class="admin-actions-row" *ngIf="auth.isAdmin()">
+        <button class="btn-secondary btn-small" (click)="toggleQR()">
+          {{ showQR ? 'Ocultar QR' : '📲 QR' }}
+        </button>
+        <button class="btn-secondary btn-small" (click)="onShareLink()">
+          📤 Compartir
+        </button>
+        <button class="btn-secondary btn-small" (click)="onCopyLink()">
+          📋 Copiar
+        </button>
+      </div>
+
       <div *ngIf="!user" class="login-msg">
         <p>Identifícate para apuntarte:</p>
         <a [routerLink]="['/login']" [queryParams]="{ returnUrl: '/apuntarse/' + token }" class="btn-primary">Identificarse</a>
       </div>
+    </div>
 
+    <!-- Modal/Panel de QR -->
+    <div class="qr-panel glass-panel" *ngIf="showQR && auth.isAdmin()" (click)="toggleQR()">
+      <h3>Invitar al Evento</h3>
+      <p>Escanea este código para apuntarte directamente:</p>
+      <div class="qr-wrapper">
+        <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + qrUrl" alt="QR Evento">
+      </div>
+      <p class="qr-url">{{qrUrl}}</p>
+      <button class="btn-primary">Cerrar</button>
     </div>
   </div>
 

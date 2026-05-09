@@ -5,7 +5,7 @@ import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
-import { GameLocation } from '../../models/interfaces';
+import { GameLocation, Player } from '../../models/interfaces';
 
 @Component({
   selector: 'app-admin',
@@ -19,6 +19,8 @@ export class AdminComponent implements OnInit {
   locations: GameLocation[] = [];
   gameSearchQuery: string = '';
   searchResults: any[] = [];
+  players: Player[] = [];
+  pendingPlayers: Player[] = [];
   
   constructor(
     private api: ApiService,
@@ -33,6 +35,23 @@ export class AdminComponent implements OnInit {
     }
     this.api.getLocations().subscribe(data => {
       this.locations = data;
+    });
+    this.loadPlayers();
+  }
+
+  loadPlayers() {
+    this.api.getPlayers().subscribe(data => {
+      this.players = data;
+      this.pendingPlayers = data.filter((p: any) => !p.isApproved);
+    });
+  }
+
+  onApprovePlayer(playerPhone: string) {
+    const admin = this.auth.getCurrentUser();
+    if (!admin) return;
+
+    this.api.approvePlayer(admin.phone, playerPhone).subscribe(() => {
+      this.loadPlayers();
     });
   }
 

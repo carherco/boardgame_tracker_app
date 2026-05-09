@@ -39,10 +39,17 @@
         <p class="hint">Esto nos ayuda a elegir qué llevar al evento.</p>
       </div>
 
+      <div class="pending-zone fade-in" *ngIf="step === 'pending'">
+        <div class="pending-icon">⏳</div>
+        <h3>Cuenta pendiente de aprobación</h3>
+        <p>Tu registro se ha realizado correctamente, pero un administrador debe habilitar tu cuenta antes de que puedas entrar.</p>
+        <p class="hint">¡Avisa por el grupo de WhatsApp para que te den paso!</p>
+      </div>
+
 
       <p class="error" *ngIf="error">{{error}}</p>
 
-      <button type="submit" class="btn-primary w-full" [disabled]="loading">
+      <button type="submit" class="btn-primary w-full" [disabled]="loading" *ngIf="step !== 'pending'">
         <span *ngIf="!loading">{{ step === 'phone' ? 'Continuar' : 'Crear mi cuenta' }}</span>
         <span *ngIf="loading" class="spinner-small"></span>
       </button>

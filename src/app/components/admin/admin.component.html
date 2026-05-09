@@ -54,4 +54,34 @@
             <p class="hint" *ngIf="searchResults.length === 0">Busca juegos para añadirlos a la base de datos local.</p>
         </section>
     </div>
+
+    <!-- Gestión de Jugadores -->
+    <section class="glass-panel admin-card full-width" style="margin-top: 30px;">
+        <h2>Gestión de Jugadores</h2>
+        
+        <div class="pending-list" *ngIf="pendingPlayers.length > 0">
+            <h3>⚠️ Pendientes de Aprobación ({{pendingPlayers.length}})</h3>
+            <div class="players-grid">
+                <div *ngFor="let p of pendingPlayers" class="player-admin-card">
+                    <div class="player-main">
+                        <strong>{{p.name}}</strong>
+                        <span class="phone">{{p.phone}}</span>
+                    </div>
+                    <div class="player-extra">
+                        <small>🎮 Favoritos: {{p.favoriteGames}}</small>
+                    </div>
+                    <button class="btn-primary btn-small" (click)="onApprovePlayer(p.phone)">Aprobar Acceso</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="approved-list" style="margin-top: 20px;">
+            <h3>✅ Jugadores Activos</h3>
+            <div class="players-compact">
+                <span *ngFor="let p of players" class="player-tag" [class.pending-tag]="!p.isApproved">
+                    {{p.name}} <small *ngIf="p.isAdmin">(Admin)</small>
+                </span>
+            </div>
+        </div>
+    </section>
 </div>

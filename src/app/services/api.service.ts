@@ -30,6 +30,13 @@ export class ApiService {
     return this.http.get<Player[]>(`${this.apiUrl}/players`);
   }
 
+  approvePlayer(adminPhone: string, playerPhone: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/players/approve`, {
+      admin_phone: adminPhone,
+      player_phone: playerPhone
+    });
+  }
+
   getLocations(): Observable<GameLocation[]> {
     return this.http.get<GameLocation[]>(`${this.apiUrl}/locations`);
   }

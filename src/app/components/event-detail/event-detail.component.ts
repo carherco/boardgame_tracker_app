@@ -21,6 +21,8 @@ export class EventDetailComponent implements OnInit {
   isSignedUp: boolean = false;
   loading: boolean = true;
   checkingIn: string | null = null; // phone of the player being checked in
+  showQR: boolean = false;
+  qrUrl: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -31,7 +33,30 @@ export class EventDetailComponent implements OnInit {
   ngOnInit(): void {
     this.token = this.route.snapshot.paramMap.get('token') || '';
     this.user = this.auth.getCurrentUser();
+    this.qrUrl = `${window.location.origin}/apuntarse/${this.token}`;
     this.loadEvent();
+  }
+
+  toggleQR() {
+    this.showQR = !this.showQR;
+  }
+
+  onShareLink() {
+    if (navigator.share) {
+      navigator.share({
+        title: `Invitación a: ${this.event.title}`,
+        text: `¡Apúntate al evento de juegos de mesa!`,
+        url: this.qrUrl
+      }).catch(console.error);
+    } else {
+      this.onCopyLink();
+    }
+  }
+
+  onCopyLink() {
+    navigator.clipboard.writeText(this.qrUrl).then(() => {
+      alert('¡Enlace copiado al portapapeles!');
+    });
   }
 
   loadEvent() {

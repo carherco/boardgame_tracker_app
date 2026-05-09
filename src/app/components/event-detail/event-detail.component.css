@@ -235,3 +235,63 @@ h2 {
   .header-content h1 { font-size: 1.8rem; }
   .event-info { font-size: 1rem; gap: 10px; }
 }
+
+/* QR Styles */
+.admin-actions-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.qr-toggle, .admin-actions-row button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.qr-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.qr-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  padding: 30px;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.qr-wrapper {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  display: inline-block;
+  margin: 20px 0;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.qr-wrapper img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.qr-url {
+  font-size: 0.8rem;
+  color: #888;
+  word-break: break-all;
+  margin-bottom: 20px;
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}

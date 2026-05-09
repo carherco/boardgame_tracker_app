@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   phone: string = '';
   name: string = '';
   favoriteGames: string = '';
-  step: 'phone' | 'register' = 'phone';
+  step: 'phone' | 'register' | 'pending' = 'phone';
   error: string = '';
   loading: boolean = false;
   returnUrl: string = '/';
@@ -42,6 +42,8 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         if (res.status === 'new_user') {
           this.step = 'register';
+        } else if (res.status === 'pending_approval') {
+          this.step = 'pending';
         } else {
           this.auth.setCurrentUser(res);
           this.router.navigateByUrl(this.returnUrl);
