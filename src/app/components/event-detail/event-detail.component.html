@@ -19,13 +19,13 @@
       
       <!-- QR y Compartir para Admins -->
       <div class="admin-actions-row" *ngIf="auth.isAdmin()">
-        <button class="btn-secondary btn-small" (click)="toggleQR()">
+        <button (click)="toggleQR()">
           {{ showQR ? 'Ocultar QR' : '📲 QR' }}
         </button>
-        <button class="btn-secondary btn-small" (click)="onShareLink()">
+        <button (click)="onShareLink()">
           📤 Compartir
         </button>
-        <button class="btn-secondary btn-small" (click)="onCopyLink()">
+        <button (click)="onCopyLink()">
           📋 Copiar
         </button>
       </div>
