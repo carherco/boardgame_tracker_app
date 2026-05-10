@@ -20,6 +20,7 @@ export class GameListComponent implements OnInit {
   maxTime: number | null = null;
   maxComplexity: number | null = null;
   showExpansions: boolean = false;
+  filtersOpen: boolean = false;
   
   players: Player[] = [];
   locations: GameLocation[] = [];

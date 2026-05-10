@@ -16,69 +16,76 @@
       </div>
     </div>
     
-    <div class="filters-row">
-      <div class="filter-item">
-        <div class="filter-header">
-          <label>Jugadores</label>
-        </div>
-        <div class="select-pill">
-          <select [(ngModel)]="playerCount" (change)="applyFilters()">
-            <option [ngValue]="null">Cualquiera</option>
-            <option *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]" [ngValue]="n">{{n}}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="filter-item">
-        <div class="filter-header">
-          <label>Tiempo máx</label>
-          <span class="range-display">{{maxTime ? maxTime + 'm' : '∞'}}</span>
-        </div>
-        <input type="range" min="15" max="240" step="15" [(ngModel)]="maxTime" (ngModelChange)="applyFilters()">
-      </div>
-
-      <div class="filter-item">
-        <div class="filter-header">
-          <label>Dificultad máx</label>
-          <span class="range-display">{{maxComplexity ? maxComplexity : '∞'}}</span>
-        </div>
-        <input type="range" min="1" max="5" step="0.5" [(ngModel)]="maxComplexity" (ngModelChange)="applyFilters()">
-      </div>
-
-      <div class="filter-item">
-        <label>Dueño</label>
-        <div class="select-pill">
-          <select [(ngModel)]="selectedPlayerId" (change)="applyFilters()">
-            <option [ngValue]="null">Todos</option>
-            <option *ngFor="let p of players" [ngValue]="p.id">{{p.name}}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="filter-item">
-        <label>Sede</label>
-        <div class="select-pill">
-          <select [(ngModel)]="selectedLocationId" (change)="applyFilters()">
-            <option [ngValue]="null">Todas</option>
-            <option *ngFor="let l of locations" [ngValue]="l.id">{{l.name}}</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="filters-row secondary">
-      <div class="filter-item-toggle">
-        <label class="toggle-container">
-          <input type="checkbox" [(ngModel)]="showExpansions" (change)="applyFilters()">
-          <span class="toggle-slider"></span>
-          <span class="toggle-label">Mostrar expansiones</span>
-        </label>
-      </div>
-    </div>
-    
-    <button class="btn-clear" *ngIf="searchTerm || playerCount || maxTime || maxComplexity || showExpansions || selectedPlayerId || selectedLocationId" (click)="resetFilters()">
-      Borrar filtros
+    <button class="filters-toggle" (click)="filtersOpen = !filtersOpen">
+      <span>⚙️ Filtros avanzados</span>
+      <span class="filters-toggle-indicator">{{ filtersOpen ? '▲' : '▼' }}</span>
     </button>
+
+    <div class="filters-body" [class.open]="filtersOpen">
+      <div class="filters-row">
+        <div class="filter-item">
+          <div class="filter-header">
+            <label>Jugadores</label>
+          </div>
+          <div class="select-pill">
+            <select [(ngModel)]="playerCount" (change)="applyFilters()">
+              <option [ngValue]="null">Cualquiera</option>
+              <option *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]" [ngValue]="n">{{n}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-header">
+            <label>Tiempo máx</label>
+            <span class="range-display">{{maxTime ? maxTime + 'm' : '∞'}}</span>
+          </div>
+          <input type="range" min="15" max="240" step="15" [(ngModel)]="maxTime" (ngModelChange)="applyFilters()">
+        </div>
+
+        <div class="filter-item">
+          <div class="filter-header">
+            <label>Dificultad máx</label>
+            <span class="range-display">{{maxComplexity ? maxComplexity : '∞'}}</span>
+          </div>
+          <input type="range" min="1" max="5" step="0.5" [(ngModel)]="maxComplexity" (ngModelChange)="applyFilters()">
+        </div>
+
+        <div class="filter-item">
+          <label>Dueño</label>
+          <div class="select-pill">
+            <select [(ngModel)]="selectedPlayerId" (change)="applyFilters()">
+              <option [ngValue]="null">Todos</option>
+              <option *ngFor="let p of players" [ngValue]="p.id">{{p.name}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-item">
+          <label>Sede</label>
+          <div class="select-pill">
+            <select [(ngModel)]="selectedLocationId" (change)="applyFilters()">
+              <option [ngValue]="null">Todas</option>
+              <option *ngFor="let l of locations" [ngValue]="l.id">{{l.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters-row secondary">
+        <div class="filter-item-toggle">
+          <label class="toggle-container">
+            <input type="checkbox" [(ngModel)]="showExpansions" (change)="applyFilters()">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Mostrar expansiones</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn-clear" *ngIf="searchTerm || playerCount || maxTime || maxComplexity || showExpansions || selectedPlayerId || selectedLocationId" (click)="resetFilters()">
+        Borrar filtros
+      </button>
+    </div>
   </section>
 
   <!-- Estado de carga -->
