@@ -35,17 +35,6 @@
         <a [routerLink]="['/login']" [queryParams]="{ returnUrl: '/apuntarse/' + token }" class="btn-primary">Identificarse</a>
       </div>
     </div>
-
-    <!-- Modal/Panel de QR -->
-    <div class="qr-panel glass-panel" *ngIf="showQR && auth.isAdmin()" (click)="toggleQR()">
-      <h3>Invitar al Evento</h3>
-      <p>Escanea este código para apuntarte directamente:</p>
-      <div class="qr-wrapper">
-        <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + qrUrl" alt="QR Evento">
-      </div>
-      <p class="qr-url">{{qrUrl}}</p>
-      <button class="btn-primary">Cerrar</button>
-    </div>
   </div>
 
   <div class="details-grid" *ngIf="event">
@@ -111,6 +100,19 @@
     <h2>Evento no encontrado</h2>
     <p>El enlace podría haber caducado o ser incorrecto.</p>
     <a routerLink="/" class="btn-primary">Volver al inicio</a>
+  </div>
+
+  <!-- Modal/Panel de QR (Fuera de cualquier contenedor para evitar problemas de z-index) -->
+  <div class="qr-overlay" *ngIf="showQR && auth.isAdmin()" (click)="toggleQR()">
+    <div class="qr-panel glass-panel" (click)="$event.stopPropagation()">
+      <h3>Invitar al Evento</h3>
+      <p>Escanea este código para apuntarte directamente:</p>
+      <div class="qr-wrapper">
+        <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + qrUrl" alt="QR Evento">
+      </div>
+      <p class="qr-url">{{qrUrl}}</p>
+      <button class="btn-primary w-full" (click)="toggleQR()">Cerrar</button>
+    </div>
   </div>
 </div>
 

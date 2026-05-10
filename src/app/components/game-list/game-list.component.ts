@@ -40,7 +40,7 @@ export class GameListComponent implements OnInit {
       error: () => this.loading = false
     });
 
-    this.api.getPlayers().subscribe(data => this.players = data);
+    this.api.getPlayers().subscribe(data => this.players = data.filter(p => p.isAdmin));
     this.api.getLocations().subscribe(data => this.locations = data);
   }
 

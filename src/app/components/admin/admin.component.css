@@ -13,14 +13,8 @@
 
 .admin-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
-}
-
-@media (max-width: 500px) {
-    .admin-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 .admin-card {
@@ -29,39 +23,14 @@
 
 h2 {
     margin-top: 0;
-    margin-bottom: 25px;
-    font-size: 1.3rem;
+    margin-bottom: 20px;
+    font-size: 1.25rem;
     color: var(--primary);
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
 }
 
 .search-bar {
     display: flex;
     gap: 10px;
-}
-
-select.glass-select {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  padding: 12px 15px;
-  color: white;
-  font-family: inherit;
-  font-size: 1rem;
-  box-sizing: border-box;
-  appearance: none;
-  cursor: pointer;
-}
-
-select.glass-select option {
-  background: #1e293b;
-  color: white;
 }
 
 .search-results {
@@ -80,39 +49,14 @@ select.glass-select option {
     border-bottom: 1px solid var(--glass-border);
 }
 
-.game-info {
-    display: flex;
-    flex-direction: column;
-}
-
 .game-info strong {
     font-size: 0.9rem;
+    display: block;
 }
 
 .game-info span {
     font-size: 0.8rem;
     color: #64748b;
-}
-
-.btn-small {
-    background: var(--primary);
-    border: none;
-    color: white;
-    padding: 5px 12px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    cursor: pointer;
-}
-
-.w-full {
-    width: 100%;
-}
-
-.hint {
-    margin-top: 15px;
-    font-size: 0.8rem;
-    color: #64748b;
-    text-align: center;
 }
 
 /* Player Management */
@@ -136,7 +80,6 @@ select.glass-select option {
 .player-main {
     display: flex;
     justify-content: space-between;
-    align-items: center;
 }
 
 .phone {
@@ -147,7 +90,6 @@ select.glass-select option {
 .player-extra {
     font-size: 0.85rem;
     color: #94a3b8;
-    line-height: 1.4;
 }
 
 .players-compact {
@@ -165,8 +107,8 @@ select.glass-select option {
 }
 
 .pending-tag {
-    border-color: rgba(234, 179, 8, 0.4);
-    color: #eab308;
+  color: #eab308;
+  border-color: rgba(234, 179, 8, 0.4);
 }
 
 .full-width {

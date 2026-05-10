@@ -2,27 +2,12 @@
   max-width: 800px;
   margin: 2rem auto;
   padding: 2.5rem;
-  border-radius: 20px;
-  color: white;
 }
 
 .header {
   margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--glass-border);
   padding-bottom: 1rem;
-}
-
-.header h2 {
-  font-size: 2rem;
-  margin: 0;
-  background: linear-gradient(90deg, #fff, #aaa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.subtitle {
-  color: #ccc;
-  margin-top: 0.5rem;
 }
 
 .step-card {
@@ -40,8 +25,7 @@
 }
 
 .step-num {
-  background: #6366f1;
-  color: white;
+  background: var(--primary);
   width: 30px;
   height: 30px;
   display: flex;
@@ -49,11 +33,6 @@
   justify-content: center;
   border-radius: 50%;
   font-weight: bold;
-}
-
-.game-selector {
-  display: flex;
-  gap: 1rem;
 }
 
 .selected-game-preview {
@@ -64,7 +43,7 @@
   padding: 1rem;
   background: rgba(99, 102, 241, 0.1);
   border-radius: 10px;
-  border: 1px dashed #6366f1;
+  border: 1px dashed var(--primary);
 }
 
 .selected-game-preview img {
@@ -88,18 +67,12 @@
   padding: 0.6rem;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 50px;
-  transition: all 0.2s;
   border: 1px solid transparent;
-}
-
-.attendee-chip:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
 }
 
 .attendee-chip.selected {
   background: rgba(99, 102, 241, 0.2);
-  border-color: #6366f1;
+  border-color: var(--primary);
 }
 
 .avatar {
@@ -111,16 +84,6 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-}
-
-.attendee-chip.selected .avatar {
-  background: #6366f1;
-}
-
-.notes-area {
-  min-height: 100px;
-  resize: vertical;
-  margin-bottom: 1rem;
 }
 
 .upload-label {
@@ -145,13 +108,6 @@
   border-radius: 8px;
 }
 
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
-
-/* MODAL */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -160,19 +116,6 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-}
-
-.modal-content {
-  width: 90%;
-  max-width: 500px;
-  padding: 2rem;
-  border-radius: 20px;
-}
-
-.search-bar {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
 }
 
 .bgg-results {
@@ -187,14 +130,4 @@
   cursor: pointer;
   display: flex;
   justify-content: space-between;
-  transition: background 0.2s;
-}
-
-.bgg-item:hover {
-  background: rgba(255,255,255,0.1);
-}
-
-.game-year {
-  color: #888;
-  font-size: 0.9rem;
 }
