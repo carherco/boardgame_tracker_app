@@ -33,7 +33,8 @@ export class EventDetailComponent implements OnInit {
   ngOnInit(): void {
     this.token = this.route.snapshot.paramMap.get('token') || '';
     this.user = this.auth.getCurrentUser();
-    this.qrUrl = `${window.location.origin}/apuntarse/${this.token}`;
+    const baseUrl = document.querySelector('base')?.href || window.location.origin + '/';
+    this.qrUrl = `${baseUrl}apuntarse/${this.token}`;
     this.loadEvent();
   }
 
