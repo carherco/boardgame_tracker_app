@@ -41,6 +41,10 @@
                 <input type="text" [(ngModel)]="gameSearchQuery" placeholder="Buscar en BoardGameGeek..." (keyup.enter)="onSearchGames()">
                 <button class="btn-secondary" (click)="onSearchGames()">Buscar</button>
             </div>
+            
+            <div class="bgg-error" *ngIf="bggError">
+                ⚠️ {{bggError}}
+            </div>
 
             <div class="search-results" *ngIf="searchResults.length > 0">
                 <div *ngFor="let game of searchResults" class="search-item">

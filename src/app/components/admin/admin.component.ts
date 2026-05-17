@@ -21,6 +21,7 @@ export class AdminComponent implements OnInit {
   searchResults: any[] = [];
   players: Player[] = [];
   pendingPlayers: Player[] = [];
+  bggError: string = '';
   
   constructor(
     private api: ApiService,
@@ -67,16 +68,34 @@ export class AdminComponent implements OnInit {
 
   onSearchGames() {
     if (!this.gameSearchQuery) return;
-    this.api.searchBgg(this.gameSearchQuery).subscribe(data => {
-      this.searchResults = data;
+    this.bggError = '';
+    this.searchResults = [];
+    this.api.searchBgg(this.gameSearchQuery).subscribe({
+      next: (data) => {
+        this.searchResults = data;
+      },
+      error: (err) => {
+        console.error('BGG search error:', err);
+        if (err.status === 401 || err.status === 403) {
+          this.bggError = err.error?.message || 'BoardGameGeek requiere autenticación mediante Token de API.';
+        } else {
+          this.bggError = 'Error al buscar en BoardGameGeek. Por favor, comprueba tu conexión.';
+        }
+      }
     });
   }
 
   onAddGame(gameData: any) {
-    this.api.addGame(gameData).subscribe(() => {
+    this.bggError = '';
+    this.api.addGame(gameData).subscribe({
+      next: () => {
         alert('Juego añadido a la biblioteca local');
         this.searchResults = [];
         this.gameSearchQuery = '';
+      },
+      error: (err) => {
+        alert('Error al añadir el juego: ' + (err.error?.message || err.message));
+      }
     });
   }
 }

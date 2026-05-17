@@ -114,3 +114,14 @@ h2 {
 .full-width {
     grid-column: 1 / -1;
 }
+
+.bgg-error {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    color: #f87171;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
