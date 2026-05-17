@@ -68,6 +68,10 @@ export class EventDetailComponent implements OnInit {
         this.extractPhotos();
         this.checkSignup();
         this.loading = false;
+        
+        if (this.user && !this.isSignedUp) {
+          this.onSignup();
+        }
       },
       error: () => this.loading = false
     });
@@ -108,6 +112,13 @@ export class EventDetailComponent implements OnInit {
   onSignup() {
     if (!this.user) return;
     this.api.signupToEvent(this.token, this.user.phone).subscribe(() => {
+      this.loadEvent();
+    });
+  }
+
+  onApprovePlayer(playerPhone: string) {
+    if (!this.user || !this.auth.isAdmin()) return;
+    this.api.approvePlayer(this.user.phone, playerPhone).subscribe(() => {
       this.loadEvent();
     });
   }

@@ -46,20 +46,31 @@
             {{signup.player.name[0]}}
           </span>
           <div class="attendee-info">
-            <span class="name">{{signup.player.name}}</span>
+            <span class="name">
+              {{signup.player.name}}
+              <span class="unapproved-badge" *ngIf="!signup.player.isApproved">⚠️ Cuenta Pendiente</span>
+            </span>
             <span class="checkin-time" *ngIf="signup.checkedIn">
               ✅ Llegó a las {{signup.checkedInAt | date:'HH:mm'}}
             </span>
-            <span class="pending-label" *ngIf="!signup.checkedIn">⏳ Pendiente</span>
           </div>
-          <button
-            *ngIf="auth.isAdmin()"
-            class="checkin-btn"
-            [class.checked]="signup.checkedIn"
-            [disabled]="checkingIn === signup.player.phone"
-            (click)="onCheckIn(signup.player.phone)">
-            {{ signup.checkedIn ? 'Deshacer' : 'Check-in' }}
-          </button>
+          
+          <div class="attendee-actions">
+            <button
+              *ngIf="auth.isAdmin() && !signup.player.isApproved"
+              class="approve-btn"
+              (click)="onApprovePlayer(signup.player.phone)">
+              Aprobar Cuenta
+            </button>
+            <button
+              *ngIf="auth.isAdmin() && signup.player.isApproved"
+              class="checkin-btn"
+              [class.checked]="signup.checkedIn"
+              [disabled]="checkingIn === signup.player.phone"
+              (click)="onCheckIn(signup.player.phone)">
+              {{ signup.checkedIn ? 'Deshacer' : 'Check-in' }}
+            </button>
+          </div>
         </li>
       </ul>
     </section>

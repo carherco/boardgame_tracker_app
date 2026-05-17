@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit {
           this.step = 'register';
         } else if (res.status === 'pending_approval') {
           this.step = 'pending';
+          this.handleAutoSignup();
         } else {
           this.auth.setCurrentUser(res);
           this.router.navigateByUrl(this.returnUrl);
@@ -54,5 +55,16 @@ export class LoginComponent implements OnInit {
         this.error = 'Ocurrió un error al identificarte. Inténtalo de nuevo.';
       }
     });
+  }
+
+  private handleAutoSignup() {
+    const match = this.returnUrl.match(/\/apuntarse\/([a-zA-Z0-9_-]+)/);
+    if (match) {
+      const token = match[1];
+      this.api.signupToEvent(token, this.phone).subscribe({
+        next: () => console.log('Auto-signup successful for pending user'),
+        error: (err) => console.error('Auto-signup failed for pending user', err)
+      });
+    }
   }
 }

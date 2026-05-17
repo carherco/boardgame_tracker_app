@@ -211,3 +211,48 @@
   word-break: break-all;
   margin-bottom: 20px;
 }
+
+.attendee-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.unapproved-badge {
+  font-size: 0.68rem;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  display: inline-block;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.attendee-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.approve-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.approve-btn:hover {
+  background: rgba(245, 158, 11, 0.25);
+  transform: translateY(-1px);
+}
+
+.approve-btn:active {
+  transform: translateY(0);
+}
+
