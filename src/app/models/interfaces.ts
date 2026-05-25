@@ -49,6 +49,7 @@ export interface Event {
   shareToken: string;
   status: 'open' | 'closed';
   signups: EventSignup[];
+  sessions: PlaySession[];
   location?: GameLocation;
 }
 

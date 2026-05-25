@@ -67,6 +67,7 @@
           <h3>{{event.title}}</h3>
           <p class="location" *ngIf="event.location">📍 {{event.location.name}}</p>
           <div class="attendees-count">👥 {{event.signups.length}} asistentes</div>
+          <div class="games-count">🎲 {{event.sessions.length}} partidas</div>
         </div>
       </div>
     </div>
@@ -76,7 +77,7 @@
   </section>
 
   <button *ngIf="auth.isAdmin()" class="fab-admin" routerLink="/admin">+</button>
-  
+
   <div *ngIf="!user" class="login-prompt glass-panel">
     <p>Identifícate para ver tus estadísticas y apuntarte a eventos.</p>
     <a routerLink="/login" class="btn-primary">Identificarse</a>
