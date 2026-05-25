@@ -17,7 +17,7 @@
       <button *ngIf="user && !isSignedUp" class="btn-primary" (click)="onSignup()">Confirmar Asistencia</button>
       <div *ngIf="user && isSignedUp" class="status-badge success">¡Te has apuntado! ✅</div>
       
-      <!-- QR y Compartir para Admins -->
+      <!-- QR y Compartir y Nueva Partida para Admins -->
       <div class="admin-actions-row" *ngIf="auth.isAdmin()">
         <button (click)="toggleQR()">
           {{ showQR ? 'Ocultar QR' : '📲 QR' }}
@@ -27,6 +27,9 @@
         </button>
         <button (click)="onCopyLink()">
           📋 Copiar
+        </button>
+        <button class="btn-new-session" (click)="openSessionPanel()">
+          🎲 Nueva Partida
         </button>
       </div>
 
@@ -40,8 +43,42 @@
   <div class="details-grid" *ngIf="event">
     <section class="attendees-card glass-panel">
       <h2>Asistentes ({{event.signups?.length || 0}})</h2>
+
+      <!-- Admin: Add player to event -->
+      <div class="admin-add-player" *ngIf="auth.isAdmin()">
+        <div class="add-player-search-wrapper">
+          <div class="search-input-row">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="player-search-input"
+              class="player-search-input"
+              placeholder="Buscar jugador para añadir..."
+              [(ngModel)]="playerSearch"
+              (input)="onPlayerSearchInput()"
+              (blur)="hideSuggestionsDelayed()"
+              autocomplete="off"
+            />
+            <span class="loading-spinner-small" *ngIf="addingPlayer">⏳</span>
+          </div>
+          <ul class="player-suggestions" *ngIf="showSuggestions">
+            <li
+              *ngFor="let player of filteredPlayers"
+              class="suggestion-item"
+              (mousedown)="selectPlayer(player)"
+            >
+              <span class="suggestion-avatar">{{player.name[0]}}</span>
+              <span class="suggestion-name">{{player.name}}</span>
+              <span class="suggestion-add-icon">+</span>
+            </li>
+          </ul>
+        </div>
+        <div class="add-player-feedback success-msg" *ngIf="addPlayerSuccess">{{addPlayerSuccess}}</div>
+        <div class="add-player-feedback error-msg" *ngIf="addPlayerError">⚠️ {{addPlayerError}}</div>
+      </div>
+
       <ul class="attendees-list">
-        <li *ngFor="let signup of event.signups" [class.checked-in]="signup.checkedIn">
+        <li *ngFor="let signup of sortedSignups" [class.checked-in]="signup.checkedIn">
           <span class="avatar" [class.avatar-checked]="signup.checkedIn">
             {{signup.player.name[0]}}
           </span>
@@ -54,7 +91,7 @@
               ✅ Llegó a las {{signup.checkedInAt | date:'HH:mm'}}
             </span>
           </div>
-          
+
           <div class="attendee-actions">
             <button
               *ngIf="auth.isAdmin() && !signup.player.isApproved"
@@ -75,8 +112,11 @@
       </ul>
     </section>
 
-    <section class="plays-card glass-panel" *ngIf="event.sessions && event.sessions.length > 0">
-      <h2>Partidas Jugadas</h2>
+    <section class="plays-card glass-panel">
+      <div class="plays-header">
+        <h2>Partidas Jugadas ({{event.sessions?.length || 0}})</h2>
+        <button *ngIf="auth.isAdmin()" class="btn-new-session-sm" (click)="openSessionPanel()">🎲 Nueva</button>
+      </div>
       <div class="session-list">
         <div *ngFor="let session of event.sessions" class="session-entry">
           <img *ngIf="session.game.imageUrl"
@@ -101,6 +141,7 @@
           </div>
         </div>
       </div>
+      <p class="no-sessions-msg" *ngIf="!event.sessions || event.sessions.length === 0">Aún no hay partidas registradas en este evento.</p>
     </section>
   </div>
 
@@ -117,7 +158,7 @@
     <a routerLink="/" class="btn-primary">Volver al inicio</a>
   </div>
 
-  <!-- Modal/Panel de QR (Fuera de cualquier contenedor para evitar problemas de z-index) -->
+  <!-- Modal QR -->
   <div class="qr-overlay" *ngIf="showQR && auth.isAdmin()" (click)="toggleQR()">
     <div class="qr-panel glass-panel" (click)="$event.stopPropagation()">
       <h3>Invitar al Evento</h3>
@@ -127,6 +168,93 @@
       </div>
       <p class="qr-url">{{qrUrl}}</p>
       <button class="btn-primary w-full" (click)="toggleQR()">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Modal Nueva Partida -->
+  <div class="session-overlay" *ngIf="showSessionPanel && auth.isAdmin()" (click)="closeSessionPanel()">
+    <div class="session-panel glass-panel" (click)="$event.stopPropagation()">
+      <div class="session-panel-header">
+        <h3>🎲 Registrar Partida</h3>
+        <button class="close-btn" (click)="closeSessionPanel()">✕</button>
+      </div>
+
+      <!-- Juego -->
+      <div class="session-field">
+        <label class="session-label">Juego</label>
+        <div class="game-search-wrapper">
+          <div class="search-input-row" [class.has-game]="selectedGame">
+            <span class="search-icon">🎯</span>
+            <input
+              type="text"
+              id="game-search-input"
+              class="player-search-input"
+              placeholder="Buscar en la ludoteca..."
+              [(ngModel)]="gameSearch"
+              (input)="onGameSearchInput()"
+              (blur)="hideGameSuggestionsDelayed()"
+              autocomplete="off"
+            />
+            <span class="game-selected-tick" *ngIf="selectedGame">✅</span>
+          </div>
+          <ul class="player-suggestions" *ngIf="showGameSuggestions">
+            <li
+              *ngFor="let game of filteredGames"
+              class="suggestion-item"
+              (mousedown)="selectGame(game)"
+            >
+              <img *ngIf="game.imageUrl" [src]="game.imageUrl" class="game-thumb" alt="">
+              <span *ngIf="!game.imageUrl" class="suggestion-avatar">🎲</span>
+              <span class="suggestion-name">{{game.name}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Jugadores -->
+      <div class="session-field">
+        <label class="session-label">Jugadores ({{selectedPlayerIds.size}} seleccionados)</label>
+        <div class="player-chips-grid">
+          <button
+            *ngFor="let signup of sortedSignups"
+            class="player-chip-btn"
+            [class.selected]="isSessionPlayerSelected(signup.player.id)"
+            (click)="toggleSessionPlayer(signup.player.id)"
+            type="button"
+          >
+            <span class="chip-avatar">{{signup.player.name[0]}}</span>
+            <span class="chip-name">{{signup.player.name}}</span>
+            <span class="chip-check" *ngIf="isSessionPlayerSelected(signup.player.id)">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Notas -->
+      <div class="session-field">
+        <label class="session-label">Notas (opcional)</label>
+        <textarea
+          class="session-notes-input"
+          [(ngModel)]="sessionNotes"
+          placeholder="¿Quién ganó? ¿Algún momento destacado?"
+          rows="2"
+        ></textarea>
+      </div>
+
+      <!-- Feedback -->
+      <div class="add-player-feedback success-msg" *ngIf="sessionSuccess">{{sessionSuccess}}</div>
+      <div class="add-player-feedback error-msg" *ngIf="sessionError">⚠️ {{sessionError}}</div>
+
+      <!-- Acciones -->
+      <div class="session-actions">
+        <button class="btn-cancel" (click)="closeSessionPanel()">Cancelar</button>
+        <button
+          class="btn-primary"
+          [disabled]="!selectedGame || savingSession"
+          (click)="submitSession()"
+        >
+          {{ savingSession ? 'Guardando...' : 'Guardar Partida' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

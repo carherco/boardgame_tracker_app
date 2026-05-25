@@ -70,6 +70,13 @@ export class ApiService {
     });
   }
 
+  adminAddPlayerToEvent(token: string, adminPhone: string, playerId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/events/${token}/admin-add-player`, {
+      admin_phone: adminPhone,
+      player_id: playerId
+    });
+  }
+
 
   getGames(): Observable<Game[]> {
     return this.http.get<Game[]>(`${this.apiUrl}/games`);
