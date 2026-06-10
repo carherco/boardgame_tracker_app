@@ -1,0 +1,174 @@
+<div class="player-detail-container fade-in" id="player-detail-container">
+  
+  <!-- LOADING STATE -->
+  <div *ngIf="loading" class="loading-state glass-panel" id="loading-spinner">
+    <div class="spinner-small"></div>
+    <p>Cargando perfil...</p>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div *ngIf="error" class="error-state glass-panel" id="error-message">
+    <p class="error">⚠️ {{error}}</p>
+    <button class="btn-primary btn-small" (click)="loadProfileData()" id="btn-retry">Reintentar</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div *ngIf="!loading && !error && profileData" class="profile-content">
+    
+    <!-- HEADER -->
+    <header class="profile-header glass-panel" id="profile-header">
+      <div class="profile-avatar-area">
+        <div class="profile-avatar">👤</div>
+        <div class="profile-user-info">
+          <h1 class="title-gradient" id="player-name">{{profileData.name}}</h1>
+          <span class="phone-badge" id="profile-phone">📱 {{user?.phone}}</span>
+        </div>
+      </div>
+      <button class="btn-logout" (click)="logout()" id="btn-logout" title="Cerrar Sesión">
+        <span class="logout-icon">🚪</span>
+        <span class="logout-text">Cerrar Sesión</span>
+      </button>
+    </header>
+
+    <!-- FAVORITE GAMES (BIO) -->
+    <section class="bio-section glass-panel" *ngIf="profileData.favoriteGames" id="bio-section">
+      <h3>🎲 Mis Juegos Preferidos</h3>
+      <p class="favorite-games-text">{{profileData.favoriteGames}}</p>
+    </section>
+
+    <!-- CORE STATS -->
+    <section class="stats-section personal" id="stats-summary-section">
+      <h2 class="section-title">Mi Resumen</h2>
+      <div class="stats-grid" id="stats-summary-grid">
+        <div class="stat-card glass-panel highlight">
+          <span class="stat-value" id="val-my-sessions">{{profileData.mySessions}}</span>
+          <span class="stat-label">Partidas</span>
+        </div>
+        <div class="stat-card glass-panel">
+          <span class="stat-value" id="val-different-games">{{profileData.differentGames}}</span>
+          <span class="stat-label">Juegos Distintos</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREMIUM STATS -->
+    <section class="stats-section premium-stats" id="stats-premium-section">
+      <h2 class="section-title">Estadísticas Detalladas</h2>
+      <div class="premium-stats-grid" id="stats-premium-grid">
+        
+        <!-- Tiempo Total -->
+        <div class="premium-stat-card glass-panel" id="card-total-time">
+          <div class="icon-indicator">⏱️</div>
+          <div class="stat-content">
+            <span class="premium-value">{{formatTime(profileData.stats.totalPlayingTime)}}</span>
+            <span class="premium-label">Tiempo Total en Mesa</span>
+          </div>
+        </div>
+
+        <!-- Complejidad Media -->
+        <div class="premium-stat-card glass-panel" id="card-complexity">
+          <div class="icon-indicator">🧠</div>
+          <div class="stat-content">
+            <span class="premium-value">{{profileData.stats.averageComplexity || '0.0'}}</span>
+            <span class="premium-label">Peso Medio (BGG)</span>
+          </div>
+        </div>
+
+        <!-- Ubicación Preferida -->
+        <div class="premium-stat-card glass-panel" id="card-location" *ngIf="profileData.stats.mostPlayedLocation">
+          <div class="icon-indicator">📍</div>
+          <div class="stat-content">
+            <span class="premium-value ellipsis" [title]="profileData.stats.mostPlayedLocation.name">{{profileData.stats.mostPlayedLocation.name}}</span>
+            <span class="premium-label">Sede Preferida ({{profileData.stats.mostPlayedLocation.playCount}} part.)</span>
+          </div>
+        </div>
+
+        <!-- Compañero Estrella -->
+        <div class="premium-stat-card glass-panel" id="card-buddy" *ngIf="profileData.stats.topGamingBuddy">
+          <div class="icon-indicator">👥</div>
+          <div class="stat-content">
+            <span class="premium-value ellipsis">{{profileData.stats.topGamingBuddy.name}}</span>
+            <span class="premium-label">Compañero Estrella ({{profileData.stats.topGamingBuddy.playCount}} part.)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Juego Favorito -->
+      <div class="favorite-game-block glass-panel" *ngIf="profileData.stats.favoriteGame" id="card-favorite-game">
+        <div class="fav-game-header">
+          <h3>👑 Juego Más Jugado</h3>
+          <span class="fav-play-count">{{profileData.stats.favoriteGame.playCount}} partidas</span>
+        </div>
+        <div class="fav-game-body">
+          <img *ngIf="profileData.stats.favoriteGame.imageUrl" [src]="profileData.stats.favoriteGame.imageUrl" alt="Cover" class="fav-game-image">
+          <div class="fav-game-info">
+            <h4>{{profileData.stats.favoriteGame.name}}</h4>
+            <p class="fav-game-description">Tu juego predilecto para las quedadas del grupo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHRONOLOGICAL SESSIONS LIST -->
+    <section class="sessions-history-section" id="history-list-section">
+      <h2 class="section-title">Historial de Partidas</h2>
+      
+      <div *ngIf="profileData.sessions.length === 0" class="no-sessions glass-panel" id="no-sessions-alert">
+        <p>Aún no tienes partidas registradas. ¡Anímate a jugar y regístralas en las quedadas!</p>
+      </div>
+
+      <div class="sessions-list" *ngIf="profileData.sessions.length > 0" id="sessions-list">
+        <div *ngFor="let session of profileData.sessions" class="session-card glass-panel fade-in" [id]="'session-card-' + session.id">
+          
+          <div class="session-game-area">
+            <div class="game-image-wrapper">
+              <img [src]="session.game.imageUrl || 'assets/default-game.jpg'" alt="{{session.game.name}}" class="session-game-image">
+            </div>
+            <div class="session-game-details">
+              <h3>{{session.game.name}}</h3>
+              <div class="game-pills-row">
+                <span class="pill" *ngIf="session.game.playingTime">⏱️ {{session.game.playingTime}} min</span>
+                <span class="pill" *ngIf="session.game.complexity">🧠 Peso: {{session.game.complexity}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="session-context-area">
+            <div class="context-item event-info">
+              <span class="icon">🎲</span>
+              <div>
+                <strong>{{session.event.title}}</strong>
+                <span class="context-subtext">📅 {{session.event.date | date:'dd MMM yyyy'}} &#64; {{session.event.time}}</span>
+              </div>
+            </div>
+            
+            <div class="context-item location-info" *ngIf="session.event.location">
+              <span class="icon">📍</span>
+              <div>
+                <span>{{session.event.location.name}}</span>
+              </div>
+            </div>
+
+            <!-- PLAYERS LIST -->
+            <div class="session-players-area">
+              <span class="players-title">Jugadores:</span>
+              <div class="players-pills">
+                <span *ngFor="let p of session.players" class="player-pill" [class.current-user]="p.phone === user?.phone">
+                  {{p.name}}
+                </span>
+              </div>
+            </div>
+
+            <!-- NOTES -->
+            <div class="session-notes" *ngIf="session.notes">
+              <span class="notes-quote">💬</span>
+              <p>{{session.notes}}</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>

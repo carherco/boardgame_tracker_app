@@ -16,7 +16,7 @@
 
   <div class="nav-spacer" *ngIf="!auth.isAdmin()"></div>
 
-  <a *ngIf="auth.currentUser$ | async as user" class="nav-item profile">
+  <a *ngIf="auth.currentUser$ | async as user" routerLink="/perfil" routerLinkActive="active" class="nav-item profile" id="nav-profile-btn">
     <span class="icon">👤</span>
     <span class="label">{{user.name.split(' ')[0]}}</span>
   </a>
