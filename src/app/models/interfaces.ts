@@ -8,6 +8,7 @@ export interface GameLocation {
 
 export interface Player {
   id: number;
+  membershipId: string;
   name: string;
   phone: string;
   isAdmin: boolean;
@@ -33,12 +34,21 @@ export interface Game {
   locations?: GameLocation[];
 }
 
+export interface EventShift {
+  id: number;
+  name: string;
+  shiftDate: string;
+  startTime: string;
+  endTime?: string;
+}
+
 export interface EventSignup {
   id: number;
   player: Player;
   checkedIn: boolean;
   checkedInAt?: string;
   signedUpAt: string;
+  shifts?: EventShift[];
 }
 
 export interface Event {
@@ -49,6 +59,7 @@ export interface Event {
   shareToken: string;
   status: 'open' | 'closed';
   signups: EventSignup[];
+  shifts?: EventShift[];
   sessions: PlaySession[];
   location?: GameLocation;
 }
@@ -57,5 +68,7 @@ export interface Event {
 export interface PlaySession {
   id: number;
   game: Game;
+  shift?: EventShift;
   players: Player[];
+  notes?: string;
 }

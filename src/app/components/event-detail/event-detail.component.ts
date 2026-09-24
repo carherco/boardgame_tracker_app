@@ -138,6 +138,8 @@ export class EventDetailComponent implements OnInit {
 
   // ── Record session ──────────────────────────────────────────────
 
+  selectedSessionShiftId: number | null = null;
+
   openSessionPanel() {
     this.showSessionPanel = true;
     this.selectedGame = null;
@@ -148,10 +150,12 @@ export class EventDetailComponent implements OnInit {
     this.sessionNotes = '';
     this.sessionSuccess = '';
     this.sessionError = '';
-    // Pre-select all checked-in attendees
-    (this.event?.signups || []).forEach((s: any) => {
-      if (s.checkedIn) this.selectedPlayerIds.add(s.player.id);
-    });
+    if (this.event?.shifts && this.event.shifts.length > 0) {
+      this.selectedSessionShiftId = this.event.shifts[0].id;
+    } else {
+      this.selectedSessionShiftId = null;
+    }
+    // No players pre-selected — the user picks them manually
   }
 
   closeSessionPanel() {
@@ -201,6 +205,7 @@ export class EventDetailComponent implements OnInit {
 
     this.api.recordSession({
       eventId: this.event.id,
+      shiftId: this.selectedSessionShiftId || undefined,
       gameId: this.selectedGame.id,
       playerIds: Array.from(this.selectedPlayerIds),
       notes: this.sessionNotes || undefined
@@ -287,17 +292,47 @@ export class EventDetailComponent implements OnInit {
     return `${baseUrl}${url}`;
   }
 
+  selectedShiftIds: Set<number> = new Set();
+
   checkSignup() {
     if (this.user && this.event?.signups) {
-      this.isSignedUp = this.event.signups.some(
+      const mySignup = this.event.signups.find(
         (s: any) => s.player?.phone === this.user?.phone
       );
+      this.isSignedUp = !!mySignup;
+
+      if (mySignup && mySignup.shifts && mySignup.shifts.length > 0) {
+        this.selectedShiftIds = new Set(mySignup.shifts.map((s: any) => s.id));
+      } else if (this.event.shifts && this.event.shifts.length > 0) {
+        // Por defecto seleccionar todos los turnos si no tiene ninguno registrado aún
+        this.selectedShiftIds = new Set(this.event.shifts.map((s: any) => s.id));
+      }
     }
+  }
+
+  toggleShift(shiftId: number) {
+    if (this.selectedShiftIds.has(shiftId)) {
+      if (this.selectedShiftIds.size > 1) {
+        this.selectedShiftIds.delete(shiftId);
+      }
+    } else {
+      this.selectedShiftIds.add(shiftId);
+    }
+    this.onSignup();
+  }
+
+  hasShift(signup: any, shiftId: number): boolean {
+    if (!signup.shifts || signup.shifts.length === 0) return true; // Asiste a todo si no se especifican turnos
+    return signup.shifts.some((s: any) => s.id === shiftId);
   }
 
   onSignup() {
     if (!this.user) return;
-    this.api.signupToEvent(this.token, this.user.phone).subscribe(() => {
+    const shiftArray = (this.event?.shifts && this.event.shifts.length > 0) 
+      ? Array.from(this.selectedShiftIds) 
+      : undefined;
+
+    this.api.signupToEvent(this.token, this.user.phone, shiftArray).subscribe(() => {
       this.loadEvent();
     });
   }

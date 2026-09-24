@@ -22,6 +22,19 @@ export class AdminComponent implements OnInit {
   players: Player[] = [];
   pendingPlayers: Player[] = [];
   bggError: string = '';
+  shifts: { name: string, date: string, time: string }[] = [];
+
+  addShiftField() {
+    this.shifts.push({ 
+      name: '', 
+      date: this.newEvent.date || '', 
+      time: this.newEvent.time || '16:00' 
+    });
+  }
+
+  removeShiftField(index: number) {
+    this.shifts.splice(index, 1);
+  }
   
   constructor(
     private api: ApiService,
@@ -60,6 +73,7 @@ export class AdminComponent implements OnInit {
   onCreateEvent() {
     this.api.createEvent({
         ...this.newEvent,
+        shifts: this.shifts,
         admin_phone: this.auth.getCurrentUser()?.phone
     }).subscribe(() => {
       this.router.navigate(['/']);

@@ -17,8 +17,8 @@ export class ApiService {
   }
 
 
-  identify(phone: string, name?: string, favoriteGames?: string): Observable<Player | { status: string }> {
-    return this.http.post<Player | { status: string }>(`${this.apiUrl}/identify`, { phone, name, favoriteGames });
+  identify(phone: string, name?: string, favoriteGames?: string, membershipId?: string): Observable<Player | { status: string }> {
+    return this.http.post<Player | { status: string }>(`${this.apiUrl}/identify`, { phone, name, favoriteGames, membershipId });
   }
 
 
@@ -59,8 +59,8 @@ export class ApiService {
     return this.http.get<Event>(`${this.apiUrl}/events/${token}`);
   }
 
-  signupToEvent(token: string, phone: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/events/${token}/signup`, { phone });
+  signupToEvent(token: string, phone: string, shiftIds?: number[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/events/${token}/signup`, { phone, shift_ids: shiftIds });
   }
 
   checkIn(token: string, adminPhone: string, playerPhone: string): Observable<any> {
@@ -95,9 +95,10 @@ export class ApiService {
     return this.http.post<Event>(`${this.apiUrl}/events`, event);
   }
 
-  recordSession(data: { eventId: number, gameId: number, playerIds: number[], notes?: string, photos?: File[] }): Observable<any> {
+  recordSession(data: { eventId: number, shiftId?: number, gameId: number, playerIds: number[], notes?: string, photos?: File[] }): Observable<any> {
     const formData = new FormData();
     formData.append('eventId', data.eventId.toString());
+    if (data.shiftId) formData.append('shiftId', data.shiftId.toString());
     formData.append('gameId', data.gameId.toString());
     formData.append('playerIds', JSON.stringify(data.playerIds));
     if (data.notes) formData.append('notes', data.notes);

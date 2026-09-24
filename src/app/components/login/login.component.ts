@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   phone: string = '';
+  membershipId: string = '';
   name: string = '';
   favoriteGames: string = '';
   step: 'phone' | 'register' | 'pending' = 'phone';
@@ -37,7 +38,12 @@ export class LoginComponent implements OnInit {
     this.error = '';
     this.loading = true;
     
-    this.api.identify(this.phone, this.name || undefined, this.favoriteGames || undefined).subscribe({
+    this.api.identify(
+      this.phone, 
+      this.name || undefined, 
+      this.favoriteGames || undefined, 
+      this.membershipId || undefined
+    ).subscribe({
       next: (res: any) => {
         this.loading = false;
         if (res.status === 'new_user') {

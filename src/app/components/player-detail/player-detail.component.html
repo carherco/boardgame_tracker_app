@@ -21,7 +21,10 @@
         <div class="profile-avatar">👤</div>
         <div class="profile-user-info">
           <h1 class="title-gradient" id="player-name">{{profileData.name}}</h1>
-          <span class="phone-badge" id="profile-phone">📱 {{user?.phone}}</span>
+          <div class="profile-badges" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
+            <span class="phone-badge" id="profile-membership" *ngIf="profileData.membershipId">🪪 Socio nº {{profileData.membershipId}}</span>
+            <span class="phone-badge" id="profile-phone">📱 {{user?.phone}}</span>
+          </div>
         </div>
       </div>
       <button class="btn-logout" (click)="logout()" id="btn-logout" title="Cerrar Sesión">

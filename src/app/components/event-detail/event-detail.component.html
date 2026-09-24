@@ -14,6 +14,28 @@
     </div>
     
     <div class="action-zone">
+      <!-- Selección de turnos si el evento tiene múltiples turnos -->
+      <div class="shifts-selection-zone" *ngIf="user && event.shifts?.length > 1" style="margin-bottom: 15px; text-align: left;">
+        <label style="font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 8px; color: var(--text-color, #e0e0e0);">
+          🕒 ¿En qué turnos vendrás?
+        </label>
+        <div class="shifts-pills-row" style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button 
+            *ngFor="let shift of event.shifts" 
+            type="button" 
+            class="btn-shift-pill" 
+            [class.selected]="selectedShiftIds.has(shift.id)"
+            (click)="toggleShift(shift.id)"
+            style="padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;"
+            [style.background]="selectedShiftIds.has(shift.id) ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.05)'"
+            [style.borderColor]="selectedShiftIds.has(shift.id) ? '#8b5cf6' : 'rgba(255,255,255,0.2)'"
+          >
+            {{selectedShiftIds.has(shift.id) ? '✓ ' : ''}}{{shift.name}} 
+            <small style="opacity: 0.8;">({{shift.shiftDate | date:'dd/MM'}}, {{shift.startTime | date:'HH:mm'}})</small>
+          </button>
+        </div>
+      </div>
+
       <button *ngIf="user && !isSignedUp" class="btn-primary" (click)="onSignup()">Confirmar Asistencia</button>
       <div *ngIf="user && isSignedUp" class="status-badge success">¡Te has apuntado! ✅</div>
       
@@ -87,6 +109,19 @@
               {{signup.player.name}}
               <span class="unapproved-badge" *ngIf="!signup.player.isApproved">⚠️ Cuenta Pendiente</span>
             </span>
+            
+            <!-- Badges de turnos a los que asiste -->
+            <div class="attendee-shifts" *ngIf="event.shifts?.length > 1" style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
+              <span 
+                *ngFor="let shift of event.shifts" 
+                class="shift-chip"
+                [style.opacity]="hasShift(signup, shift.id) ? '1' : '0.3'"
+                style="font-size: 0.75rem; padding: 2px 6px; border-radius: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);"
+              >
+                {{shift.name}} {{hasShift(signup, shift.id) ? '✓' : ''}}
+              </span>
+            </div>
+
             <span class="checkin-time" *ngIf="signup.checkedIn">
               ✅ Llegó a las {{signup.checkedInAt | date:'HH:mm'}}
             </span>

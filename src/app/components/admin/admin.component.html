@@ -31,7 +31,20 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn-primary w-full">Publicar convocatoria</button>
+                <div class="form-group" style="margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="margin: 0;">Turnos u Horarios Específicos (Opcional)</label>
+                        <button type="button" class="btn-small btn-secondary" (click)="addShiftField()">+ Añadir Turno</button>
+                    </div>
+                    <div *ngFor="let s of shifts; let i = index" class="shift-item-row" style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;">
+                        <input type="text" [(ngModel)]="s.name" [name]="'shift_name_' + i" placeholder="Ej: Viernes tarde" required style="flex: 2;">
+                        <input type="date" [(ngModel)]="s.date" [name]="'shift_date_' + i" required style="flex: 1;">
+                        <input type="time" [(ngModel)]="s.time" [name]="'shift_time_' + i" required style="flex: 1;">
+                        <button type="button" class="btn-small" (click)="removeShiftField(i)" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);">✕</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary w-full" style="margin-top: 10px;">Publicar convocatoria</button>
             </form>
         </section>
 
@@ -69,7 +82,7 @@
                 <div *ngFor="let p of pendingPlayers" class="player-admin-card">
                     <div class="player-main">
                         <strong>{{p.name}}</strong>
-                        <span class="phone">{{p.phone}}</span>
+                        <span class="phone">🪪 Socio: {{p.membershipId}} | 📱 {{p.phone}}</span>
                     </div>
                     <div class="player-extra">
                         <small>🎮 Favoritos: {{p.favoriteGames}}</small>
@@ -83,7 +96,7 @@
             <h3>✅ Jugadores Activos</h3>
             <div class="players-compact">
                 <span *ngFor="let p of players" class="player-tag" [class.pending-tag]="!p.isApproved">
-                    {{p.name}} <small *ngIf="p.isAdmin">(Admin)</small>
+                    [{{p.membershipId}}] {{p.name}} <small *ngIf="p.isAdmin">(Admin)</small>
                 </span>
             </div>
         </div>
