@@ -74,7 +74,10 @@
 
     <!-- Gestión de Jugadores -->
     <section class="glass-panel admin-card full-width" style="margin-top: 30px;">
-        <h2>Gestión de Jugadores</h2>
+        <div class="players-header">
+            <h2>Gestión de Jugadores</h2>
+            <a class="btn-secondary btn-small" routerLink="/admin/jugadores">📊 Estadísticas y fichas</a>
+        </div>
         
         <div class="pending-list" *ngIf="pendingPlayers.length > 0">
             <h3>⚠️ Pendientes de Aprobación ({{pendingPlayers.length}})</h3>
@@ -95,9 +98,9 @@
         <div class="approved-list" style="margin-top: 20px;">
             <h3>✅ Jugadores Activos</h3>
             <div class="players-compact">
-                <span *ngFor="let p of players" class="player-tag" [class.pending-tag]="!p.isApproved">
+                <a *ngFor="let p of players" class="player-tag" [class.pending-tag]="!p.isApproved" [routerLink]="['/admin/jugadores', p.id]">
                     [{{p.membershipId}}] {{p.name}} <small *ngIf="p.isAdmin">(Admin)</small>
-                </span>
+                </a>
             </div>
         </div>
     </section>

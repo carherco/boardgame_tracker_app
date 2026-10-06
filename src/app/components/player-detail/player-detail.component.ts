@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { Player } from '../../models/interfaces';
@@ -17,20 +17,36 @@ export class PlayerDetailComponent implements OnInit {
   profileData: any = null;
   loading: boolean = true;
   error: string = '';
+  // Id del jugador consultado desde admin (/admin/jugadores/:id); null en el perfil propio
+  viewedPlayerId: number | null = null;
 
   constructor(
     private api: ApiService,
     public auth: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
+
+  get isAdminView(): boolean {
+    return this.viewedPlayerId !== null;
+  }
 
   ngOnInit(): void {
     this.user = this.auth.getCurrentUser();
     if (!this.user) {
-      this.router.navigate(['/login'], { queryParams: { returnUrl: '/perfil' } });
+      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
       return;
     }
-    this.loadProfileData();
+
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id && !this.auth.isAdmin()) {
+        this.router.navigate(['/']);
+        return;
+      }
+      this.viewedPlayerId = id ? Number(id) : null;
+      this.loadProfileData();
+    });
   }
 
   loadProfileData() {
@@ -38,14 +54,20 @@ export class PlayerDetailComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.api.getMyStats(this.user.phone).subscribe({
+    const request = this.isAdminView
+      ? this.api.getPlayerProfile(this.user.phone, this.viewedPlayerId!)
+      : this.api.getMyStats(this.user.phone);
+
+    request.subscribe({
       next: (data) => {
         this.profileData = data;
         this.loading = false;
       },
       error: (err) => {
         console.error('Error fetching player profile data', err);
-        this.error = 'No se pudieron cargar tus estadísticas. Inténtalo de nuevo más tarde.';
+        this.error = this.isAdminView
+          ? 'No se pudo cargar la ficha del jugador.'
+          : 'No se pudieron cargar tus estadísticas. Inténtalo de nuevo más tarde.';
         this.loading = false;
       }
     });
@@ -54,6 +76,10 @@ export class PlayerDetailComponent implements OnInit {
   logout() {
     this.auth.logout();
     this.router.navigate(['/']);
+  }
+
+  isViewedPlayer(p: { id: number, phone?: string }): boolean {
+    return this.isAdminView ? p.id === this.viewedPlayerId : p.phone === this.user?.phone;
   }
 
   formatTime(minutes: number): string {

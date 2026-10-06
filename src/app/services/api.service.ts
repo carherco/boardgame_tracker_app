@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Player, Game, Event, GameLocation } from '../models/interfaces';
+import { Player, Game, Event, GameLocation, PlayersStats } from '../models/interfaces';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -47,6 +47,14 @@ export class ApiService {
 
   getMyStats(phone: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/stats/me?phone=${phone}`);
+  }
+
+  getPlayersStats(adminPhone: string): Observable<PlayersStats> {
+    return this.http.get<PlayersStats>(`${this.apiUrl}/stats/players`, { params: { admin_phone: adminPhone } });
+  }
+
+  getPlayerProfile(adminPhone: string, playerId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/stats/players/${playerId}`, { params: { admin_phone: adminPhone } });
   }
 
 

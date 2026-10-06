@@ -125,3 +125,21 @@ h2 {
     font-size: 0.85rem;
     line-height: 1.4;
 }
+
+.players-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.players-header h2 {
+    margin: 0;
+}
+
+a.player-tag {
+    color: inherit;
+    text-decoration: none;
+}

@@ -23,25 +23,39 @@
           <h1 class="title-gradient" id="player-name">{{profileData.name}}</h1>
           <div class="profile-badges" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
             <span class="phone-badge" id="profile-membership" *ngIf="profileData.membershipId">🪪 Socio nº {{profileData.membershipId}}</span>
-            <span class="phone-badge" id="profile-phone">📱 {{user?.phone}}</span>
+            <span class="phone-badge" id="profile-phone">📱 {{isAdminView ? profileData.player.phone : user?.phone}}</span>
           </div>
         </div>
       </div>
-      <button class="btn-logout" (click)="logout()" id="btn-logout" title="Cerrar Sesión">
+      <button *ngIf="!isAdminView" class="btn-logout" (click)="logout()" id="btn-logout" title="Cerrar Sesión">
         <span class="logout-icon">🚪</span>
         <span class="logout-text">Cerrar Sesión</span>
       </button>
+      <a *ngIf="isAdminView" class="btn-back" routerLink="/admin/jugadores">← Jugadores</a>
     </header>
+
+    <!-- PERSONAL DATA (ADMIN VIEW) -->
+    <section class="bio-section glass-panel personal-data" *ngIf="isAdminView" id="personal-data-section">
+      <h3>📋 Datos personales</h3>
+      <dl>
+        <dt>Nombre completo</dt><dd>{{profileData.player.fullName || '—'}}</dd>
+        <dt>Teléfono</dt><dd>{{profileData.player.phone}}</dd>
+        <dt>Nº de socio</dt><dd>{{profileData.player.membershipId}}</dd>
+        <dt>Alta</dt><dd>{{profileData.player.createdAt | date:'dd/MM/yyyy'}}</dd>
+        <dt>Rol</dt><dd>{{profileData.player.isAdmin ? 'Administrador' : 'Jugador'}}</dd>
+        <dt>Estado</dt><dd>{{profileData.player.isApproved ? 'Aprobado' : 'Pendiente de aprobación'}}</dd>
+      </dl>
+    </section>
 
     <!-- FAVORITE GAMES (BIO) -->
     <section class="bio-section glass-panel" *ngIf="profileData.favoriteGames" id="bio-section">
-      <h3>🎲 Mis Juegos Preferidos</h3>
+      <h3>🎲 {{isAdminView ? 'Juegos preferidos' : 'Mis Juegos Preferidos'}}</h3>
       <p class="favorite-games-text">{{profileData.favoriteGames}}</p>
     </section>
 
     <!-- CORE STATS -->
     <section class="stats-section personal" id="stats-summary-section">
-      <h2 class="section-title">Mi Resumen</h2>
+      <h2 class="section-title">{{isAdminView ? 'Resumen' : 'Mi Resumen'}}</h2>
       <div class="stats-grid" id="stats-summary-grid">
         <div class="stat-card glass-panel highlight">
           <span class="stat-value" id="val-my-sessions">{{profileData.mySessions}}</span>
@@ -51,6 +65,34 @@
           <span class="stat-value" id="val-different-games">{{profileData.differentGames}}</span>
           <span class="stat-label">Juegos Distintos</span>
         </div>
+        <div class="stat-card glass-panel">
+          <span class="stat-value" id="val-events-attended">{{profileData.eventsAttended}}</span>
+          <span class="stat-label">Eventos asistidos</span>
+        </div>
+        <div class="stat-card glass-panel">
+          <span class="stat-value" id="val-events-signed-up">{{profileData.eventsSignedUp}}</span>
+          <span class="stat-label">Eventos apuntado</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section class="stats-section" id="events-section">
+      <h2 class="section-title">Eventos</h2>
+      <div *ngIf="profileData.events.length === 0" class="no-sessions glass-panel">
+        <p>{{isAdminView ? 'No se ha apuntado a ningún evento.' : 'Aún no te has apuntado a ningún evento.'}}</p>
+      </div>
+      <div class="events-list glass-panel" *ngIf="profileData.events.length > 0">
+        <a *ngFor="let e of profileData.events" class="event-row" [routerLink]="['/apuntarse', e.shareToken]">
+          <div class="event-row-info">
+            <strong class="ellipsis">{{e.title}}</strong>
+            <span class="context-subtext">📅 {{e.date | date:'dd/MM/yyyy'}}<ng-container *ngIf="e.location"> · 📍 {{e.location}}</ng-container></span>
+          </div>
+          <div class="event-row-badges">
+            <span class="event-badge" [class.ok]="e.attended">{{e.attended ? 'Asistió' : (e.signedUp ? 'Apuntado' : '—')}}</span>
+            <span class="event-badge" *ngIf="e.sessionsPlayed > 0">🎲 {{e.sessionsPlayed}}</span>
+          </div>
+        </a>
       </div>
     </section>
 
@@ -106,7 +148,7 @@
           <img *ngIf="profileData.stats.favoriteGame.imageUrl" [src]="profileData.stats.favoriteGame.imageUrl" alt="Cover" class="fav-game-image">
           <div class="fav-game-info">
             <h4>{{profileData.stats.favoriteGame.name}}</h4>
-            <p class="fav-game-description">Tu juego predilecto para las quedadas del grupo.</p>
+            <p class="fav-game-description">{{isAdminView ? 'Su' : 'Tu'}} juego predilecto para las quedadas del grupo.</p>
           </div>
         </div>
       </div>
@@ -117,7 +159,8 @@
       <h2 class="section-title">Historial de Partidas</h2>
       
       <div *ngIf="profileData.sessions.length === 0" class="no-sessions glass-panel" id="no-sessions-alert">
-        <p>Aún no tienes partidas registradas. ¡Anímate a jugar y regístralas en las quedadas!</p>
+        <p *ngIf="!isAdminView">Aún no tienes partidas registradas. ¡Anímate a jugar y regístralas en las quedadas!</p>
+        <p *ngIf="isAdminView">Este jugador aún no tiene partidas registradas.</p>
       </div>
 
       <div class="sessions-list" *ngIf="profileData.sessions.length > 0" id="sessions-list">
@@ -156,7 +199,7 @@
             <div class="session-players-area">
               <span class="players-title">Jugadores:</span>
               <div class="players-pills">
-                <span *ngFor="let p of session.players" class="player-pill" [class.current-user]="p.phone === user?.phone">
+                <span *ngFor="let p of session.players" class="player-pill" [class.current-user]="isViewedPlayer(p)">
                   {{p.name}}
                 </span>
               </div>

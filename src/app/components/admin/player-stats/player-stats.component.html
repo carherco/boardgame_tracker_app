@@ -1,0 +1,99 @@
+<div class="stats-container fade-in">
+  <header class="stats-header">
+    <h1 class="title-gradient">Jugadores</h1>
+    <a class="btn-back" routerLink="/admin">← Admin</a>
+  </header>
+
+  <!-- BUSCADOR DE JUGADOR -->
+  <section class="glass-panel block">
+    <h2>🔎 Ficha de jugador</h2>
+    <input type="text" class="search-input" [(ngModel)]="playerSearch"
+           placeholder="Buscar por nombre o nº de socio..." autocomplete="off">
+    <div class="search-results" *ngIf="filteredPlayers.length > 0">
+      <a *ngFor="let p of filteredPlayers" class="search-result" [routerLink]="['/admin/jugadores', p.id]">
+        <span class="ellipsis">{{p.name}}</span>
+        <small>🪪 {{p.membershipId}}</small>
+      </a>
+    </div>
+    <p class="hint" *ngIf="playerSearch && filteredPlayers.length === 0">No hay jugadores que coincidan.</p>
+  </section>
+
+  <div *ngIf="loading" class="glass-panel block muted">Cargando estadísticas...</div>
+  <div *ngIf="error" class="glass-panel block"><p class="error">⚠️ {{error}}</p></div>
+
+  <ng-container *ngIf="stats">
+    <!-- RESUMEN -->
+    <section class="summary-grid">
+      <div class="glass-panel summary-card">
+        <span class="summary-value">{{stats.summary.registeredPlayers}}</span>
+        <span class="summary-label">Registrados</span>
+      </div>
+      <div class="glass-panel summary-card">
+        <span class="summary-value">{{stats.summary.playersWithAttendance}}</span>
+        <span class="summary-label">Han venido a algún evento</span>
+      </div>
+      <div class="glass-panel summary-card">
+        <span class="summary-value">{{stats.summary.playersNeverAttended}}</span>
+        <span class="summary-label">Aún no han venido</span>
+      </div>
+      <div class="glass-panel summary-card">
+        <span class="summary-value">{{stats.summary.averageAttendees}}</span>
+        <span class="summary-label">Asistentes por evento</span>
+      </div>
+    </section>
+
+    <!-- RANKINGS -->
+    <section class="glass-panel block">
+      <h2>🏆 Top 20</h2>
+      <div class="tabs">
+        <button *ngFor="let tab of rankingTabs" type="button" class="tab"
+                [class.active]="activeTab === tab.key" (click)="activeTab = tab.key">
+          {{tab.label}}
+        </button>
+      </div>
+
+      <ol class="ranking" *ngIf="activeRanking.length > 0">
+        <li *ngFor="let entry of activeRanking; let i = index">
+          <a class="ranking-row" [routerLink]="['/admin/jugadores', entry.id]">
+            <span class="position" [class.podium]="i < 3">{{i + 1}}</span>
+            <span class="ranking-name ellipsis">{{entry.name}}</span>
+            <small class="membership">{{entry.membershipId}}</small>
+            <strong class="ranking-value">{{formatValue(entry.value)}}</strong>
+          </a>
+        </li>
+      </ol>
+      <p class="hint" *ngIf="activeRanking.length === 0">Todavía no hay datos.</p>
+      <p class="hint">Cuenta como asistencia a un evento haber hecho check-in o haber jugado al menos una partida en él.</p>
+    </section>
+
+    <!-- ASISTENCIA POR EVENTO -->
+    <section class="glass-panel block">
+      <h2>📅 Asistencia por evento</h2>
+      <div class="table-scroll">
+        <table class="events-table">
+          <thead>
+            <tr>
+              <th>Evento</th>
+              <th title="Apuntados">Apunt.</th>
+              <th title="Asistentes">Asist.</th>
+              <th title="Partidas">Part.</th>
+              <th title="Juegos distintos">Juegos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let e of stats.events">
+              <td>
+                <a [routerLink]="['/apuntarse', e.shareToken]">{{e.title}}</a>
+                <small>{{e.date | date:'dd/MM/yyyy'}}<ng-container *ngIf="e.location"> · {{e.location}}</ng-container></small>
+              </td>
+              <td>{{e.signups}}</td>
+              <td>{{e.attendees}}</td>
+              <td>{{e.sessions}}</td>
+              <td>{{e.differentGames}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </ng-container>
+</div>

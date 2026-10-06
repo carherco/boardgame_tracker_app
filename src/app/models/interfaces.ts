@@ -72,3 +72,40 @@ export interface PlaySession {
   players: Player[];
   notes?: string;
 }
+
+export interface PlayerRankingEntry {
+  id: number;
+  name: string;
+  membershipId: string;
+  value: number;
+}
+
+export interface EventAttendanceStats {
+  id: number;
+  title: string;
+  date: string;
+  shareToken: string;
+  location: string | null;
+  signups: number;
+  attendees: number;
+  sessions: number;
+  differentGames: number;
+}
+
+export interface PlayersStats {
+  summary: {
+    registeredPlayers: number;
+    playersWithAttendance: number;
+    playersNeverAttended: number;
+    playersWithSessions: number;
+    totalEvents: number;
+    averageAttendees: number;
+  };
+  rankings: {
+    events: PlayerRankingEntry[];
+    sessions: PlayerRankingEntry[];
+    differentGames: PlayerRankingEntry[];
+    playingTime: PlayerRankingEntry[];
+  };
+  events: EventAttendanceStats[];
+}
