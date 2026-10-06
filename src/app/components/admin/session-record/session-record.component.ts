@@ -16,6 +16,7 @@ export class SessionRecordComponent implements OnInit {
   activeEvent: Event | null = null;
   selectedGame: Game | null = null;
   selectedPlayerIds: number[] = [];
+  selectedShiftId: number | null = null;
   
   showBggModal = false;
   bggResults: any[] = [];
@@ -33,7 +34,11 @@ export class SessionRecordComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.getActiveEvent().subscribe({
-      next: (event) => this.activeEvent = event,
+      next: (event) => {
+        this.activeEvent = event;
+        // Con un único turno se asigna solo; con varios hay que elegirlo (se registra a posteriori)
+        this.selectedShiftId = event.shifts?.length === 1 ? event.shifts[0].id : null;
+      },
       error: (err) => console.error('Error fetching active event', err)
     });
   }
@@ -95,11 +100,20 @@ export class SessionRecordComponent implements OnInit {
     }
   }
 
+  get missingShift(): boolean {
+    return (this.activeEvent?.shifts?.length || 0) > 1 && !this.selectedShiftId;
+  }
+
+  shiftTime(isoTime: string | undefined): string {
+    return isoTime ? isoTime.substring(11, 16) : '';
+  }
+
   onSubmit() {
-    if (!this.activeEvent || !this.selectedGame || this.selectedPlayerIds.length === 0) return;
+    if (!this.activeEvent || !this.selectedGame || this.selectedPlayerIds.length === 0 || this.missingShift) return;
 
     const sessionData = {
       eventId: this.activeEvent.id!,
+      shiftId: this.selectedShiftId || undefined,
       gameId: this.selectedGame.id!,
       playerIds: this.selectedPlayerIds,
       notes: this.sessionForm.get('notes')?.value,
@@ -118,6 +132,7 @@ export class SessionRecordComponent implements OnInit {
   resetForm() {
     this.selectedGame = null;
     this.selectedPlayerIds = [];
+    this.selectedShiftId = this.activeEvent?.shifts?.length === 1 ? this.activeEvent.shifts[0].id : null;
     this.photoFiles = [];
     this.photoPreviews = [];
     this.sessionForm.reset();

@@ -150,11 +150,8 @@ export class EventDetailComponent implements OnInit {
     this.sessionNotes = '';
     this.sessionSuccess = '';
     this.sessionError = '';
-    if (this.event?.shifts && this.event.shifts.length > 0) {
-      this.selectedSessionShiftId = this.event.shifts[0].id;
-    } else {
-      this.selectedSessionShiftId = null;
-    }
+    // Las partidas suelen registrarse a posteriori: con varios turnos no se preselecciona ninguno
+    this.selectedSessionShiftId = this.event?.shifts?.length === 1 ? this.event.shifts[0].id : null;
     // No players pre-selected — the user picks them manually
   }
 
@@ -197,8 +194,31 @@ export class EventDetailComponent implements OnInit {
     return this.selectedPlayerIds.has(playerId);
   }
 
+  get hasMultipleShifts(): boolean {
+    return (this.event?.shifts?.length || 0) > 1;
+  }
+
+  get missingSessionShift(): boolean {
+    return this.hasMultipleShifts && !this.selectedSessionShiftId;
+  }
+
+  // Las horas (turnos, hora del evento) llegan como "1970-01-01T10:00:00+00:00": se toma la hora tal cual;
+  // con el pipe date Angular la convertiría a la zona horaria local y saldría desplazada
+  shiftTime(isoTime: string | undefined): string {
+    return isoTime ? isoTime.substring(11, 16) : '';
+  }
+
+  changeSessionShift(session: any, shiftId: number) {
+    const admin = this.auth.getCurrentUser();
+    if (!admin || !shiftId || session.shift?.id === shiftId) return;
+    this.api.changeSessionShift(admin.phone, session.id, shiftId).subscribe({
+      next: () => session.shift = this.event.shifts.find((s: any) => s.id === shiftId),
+      error: (err) => alert(err.error?.error || 'No se pudo cambiar el turno')
+    });
+  }
+
   submitSession() {
-    if (!this.selectedGame || !this.event) return;
+    if (!this.selectedGame || !this.event || this.missingSessionShift) return;
     this.savingSession = true;
     this.sessionError = '';
     this.sessionSuccess = '';

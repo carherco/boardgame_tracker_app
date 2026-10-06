@@ -288,3 +288,48 @@ input:focus, select:focus, textarea:focus {
   object-fit: cover;
   flex-shrink: 0;
 }
+
+/* Selector de opciones en forma de píldoras (p. ej. turnos) */
+.choice-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.choice-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.choice-pill small {
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+.choice-pill.selected {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-color: #8b5cf6;
+  color: white;
+}
+
+.shift-select {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  border-radius: 8px;
+  padding: 3px 6px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  margin: 4px 0;
+}
+
+.shift-tag {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}

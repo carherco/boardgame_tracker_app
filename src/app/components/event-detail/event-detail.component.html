@@ -4,7 +4,7 @@
       <h1 class="title-gradient">{{event.title}}</h1>
       <div class="event-info">
         <span>📅 {{event.date | date:'dd/MM/yyyy'}}</span>
-        <span>🕒 {{event.time | date:'HH:mm'}}</span>
+        <span>🕒 {{shiftTime(event.time)}}</span>
         <span *ngIf="event.location" class="location">
           📍 <strong>{{event.location.name}}</strong>: {{event.location.address}}
           <a [href]="'https://www.google.com/maps/search/?api=1&query=' + event.location.address" target="_blank" class="map-link">(Ver mapa)</a>
@@ -31,7 +31,7 @@
             [style.borderColor]="selectedShiftIds.has(shift.id) ? '#8b5cf6' : 'rgba(255,255,255,0.2)'"
           >
             {{selectedShiftIds.has(shift.id) ? '✓ ' : ''}}{{shift.name}} 
-            <small style="opacity: 0.8;">({{shift.shiftDate | date:'dd/MM'}}, {{shift.startTime | date:'HH:mm'}})</small>
+            <small style="opacity: 0.8;">({{shift.shiftDate | date:'dd/MM'}}, {{shiftTime(shift.startTime)}})</small>
           </button>
         </div>
       </div>
@@ -167,6 +167,14 @@
                 <span class="stat-item" title="Mejor con..." *ngIf="session.game.bestPlayers">⭐ {{session.game.bestPlayers}}</span>
               </div>
             </div>
+            <div class="session-shift" *ngIf="hasMultipleShifts">
+              <select *ngIf="auth.isAdmin()" class="shift-select" [ngModel]="session.shift?.id"
+                      (ngModelChange)="changeSessionShift(session, $event)" title="Turno de la partida">
+                <option [ngValue]="undefined" disabled>Sin turno</option>
+                <option *ngFor="let shift of event.shifts" [ngValue]="shift.id">🕒 {{shift.name}}</option>
+              </select>
+              <span *ngIf="!auth.isAdmin() && session.shift" class="shift-tag">🕒 {{session.shift.name}}</span>
+            </div>
             <p *ngIf="session.notes" class="session-notes">"{{session.notes}}"</p>
             <div class="session-players" *ngIf="session.players?.length > 0">
               <span *ngFor="let player of session.players" class="player-chip">
@@ -212,6 +220,22 @@
       <div class="session-panel-header">
         <h3>🎲 Registrar Partida</h3>
         <button class="close-btn" (click)="closeSessionPanel()">✕</button>
+      </div>
+
+      <!-- Turno -->
+      <div class="session-field" *ngIf="hasMultipleShifts">
+        <label class="session-label">Turno en que se jugó</label>
+        <div class="choice-pills">
+          <button
+            *ngFor="let shift of event.shifts"
+            type="button"
+            class="choice-pill"
+            [class.selected]="selectedSessionShiftId === shift.id"
+            (click)="selectedSessionShiftId = shift.id"
+          >
+            {{shift.name}} <small>{{shift.shiftDate | date:'dd/MM'}} · {{shiftTime(shift.startTime)}}</small>
+          </button>
+        </div>
       </div>
 
       <!-- Juego -->
@@ -285,7 +309,7 @@
         <button class="btn-cancel" (click)="closeSessionPanel()">Cancelar</button>
         <button
           class="btn-primary"
-          [disabled]="!selectedGame || savingSession"
+          [disabled]="!selectedGame || missingSessionShift || savingSession"
           (click)="submitSession()"
         >
           {{ savingSession ? 'Guardando...' : 'Guardar Partida' }}

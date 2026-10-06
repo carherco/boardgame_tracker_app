@@ -103,6 +103,13 @@ export class ApiService {
     return this.http.post<Event>(`${this.apiUrl}/events`, event);
   }
 
+  changeSessionShift(adminPhone: string, sessionId: number, shiftId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/games/session/${sessionId}/shift`, {
+      admin_phone: adminPhone,
+      shift_id: shiftId
+    });
+  }
+
   recordSession(data: { eventId: number, shiftId?: number, gameId: number, playerIds: number[], notes?: string, photos?: File[] }): Observable<any> {
     const formData = new FormData();
     formData.append('eventId', data.eventId.toString());

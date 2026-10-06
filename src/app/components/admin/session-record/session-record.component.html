@@ -5,6 +5,20 @@
   </header>
 
   <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
+    <!-- TURNO (solo si el evento tiene varios) -->
+    <section class="step-card" *ngIf="(activeEvent?.shifts?.length || 0) > 1">
+      <div class="step-header">
+        <span class="step-num">🕒</span>
+        <h3>Turno en que se jugó</h3>
+      </div>
+      <div class="choice-pills">
+        <button *ngFor="let shift of activeEvent!.shifts" type="button" class="choice-pill"
+                [class.selected]="selectedShiftId === shift.id" (click)="selectedShiftId = shift.id">
+          {{shift.name}} <small>{{shift.shiftDate | date:'dd/MM'}} · {{shiftTime(shift.startTime)}}</small>
+        </button>
+      </div>
+    </section>
+
     <!-- ETAPA 1: SELECCIÓN DE JUEGO -->
     <section class="step-card">
       <div class="step-header">
@@ -71,7 +85,7 @@
     </section>
 
     <div class="actions">
-      <button type="submit" class="btn-primary" [disabled]="!sessionForm.valid || selectedPlayerIds.length === 0 || !selectedGame">
+      <button type="submit" class="btn-primary" [disabled]="!sessionForm.valid || selectedPlayerIds.length === 0 || !selectedGame || missingShift">
         Guardar Partida
       </button>
     </div>
