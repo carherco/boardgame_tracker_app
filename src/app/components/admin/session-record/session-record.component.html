@@ -39,7 +39,8 @@
         <div *ngFor="let signup of activeEvent.signups" 
              class="attendee-chip" 
              [class.selected]="isSelected(signup.player.id)"
-             (click)="toggleAttendee(signup.player.id)">
+             (click)="toggleAttendee(signup.player.id)"
+             [attr.title]="signup.player.name">
           <div class="avatar">{{ signup.player.name.charAt(0) }}</div>
           <span>{{ signup.player.name }}</span>
         </div>

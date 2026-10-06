@@ -256,6 +256,7 @@
             [class.selected]="isSessionPlayerSelected(signup.player.id)"
             (click)="toggleSessionPlayer(signup.player.id)"
             type="button"
+            [attr.title]="signup.player.name"
           >
             <span class="chip-avatar">{{signup.player.name[0]}}</span>
             <span class="chip-name">{{signup.player.name}}</span>

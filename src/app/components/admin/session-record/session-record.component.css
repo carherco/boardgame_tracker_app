@@ -68,6 +68,14 @@
   background: rgba(255, 255, 255, 0.05);
   border-radius: 50px;
   border: 1px solid transparent;
+  min-width: 0;
+}
+
+.attendee-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .attendee-chip.selected {
