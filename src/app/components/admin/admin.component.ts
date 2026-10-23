@@ -19,8 +19,10 @@ export class AdminComponent implements OnInit {
   locations: GameLocation[] = [];
   gameSearchQuery: string = '';
   searchResults: any[] = [];
+  // Player management
   players: Player[] = [];
-  pendingPlayers: Player[] = [];
+  playerSearch: string = '';
+  newPlayer = { name: '', phone: '', membershipId: '', favoriteGames: '' };
   bggError: string = '';
   shifts: { name: string, date: string, time: string }[] = [];
 
@@ -56,7 +58,6 @@ export class AdminComponent implements OnInit {
   loadPlayers() {
     this.api.getPlayers().subscribe(data => {
       this.players = data;
-      this.pendingPlayers = data.filter((p: any) => !p.isApproved);
     });
   }
 
@@ -79,7 +80,34 @@ export class AdminComponent implements OnInit {
       this.router.navigate(['/']);
     });
   }
-
+  // Create a new player from the admin form
+  onCreatePlayer(): void {
+    if (!this.newPlayer.phone || !this.newPlayer.name) {
+      // Optionally add user feedback
+      return;
+    }
+    this.api.identify(
+      this.newPlayer.phone,
+      this.newPlayer.name,
+      this.newPlayer.favoriteGames,
+      this.newPlayer.membershipId
+    ).subscribe(res => {
+      // If API returns a Player object, add it to the local list
+      if ((res as any).id) {
+        this.players = [...this.players, res as Player];
+      }
+      // Reset the form fields
+      this.newPlayer = { name: '', phone: '', membershipId: '', favoriteGames: '' };
+    });
+  }
+  get filteredPlayers(): Player[] {
+    if (!this.playerSearch) return [];
+    const term = this.playerSearch.toLowerCase();
+    return this.players.filter(p =>
+      p.name.toLowerCase().includes(term) ||
+      p.membershipId.toLowerCase().includes(term)
+    );
+  }
   onSearchGames() {
     if (!this.gameSearchQuery) return;
     this.bggError = '';

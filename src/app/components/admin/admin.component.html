@@ -10,7 +10,8 @@
             <form (submit)="onCreateEvent()">
                 <div class="form-group">
                     <label>Título del Evento</label>
-                    <input type="text" [(ngModel)]="newEvent.title" name="title" placeholder="Ej: Noche de Eurogames" required>
+                    <input type="text" [(ngModel)]="newEvent.title" name="title" placeholder="Ej: Noche de Eurogames"
+                        required>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -32,29 +33,36 @@
                 </div>
 
                 <div class="form-group" style="margin-top: 15px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <label style="margin: 0;">Turnos u Horarios Específicos (Opcional)</label>
-                        <button type="button" class="btn-small btn-secondary" (click)="addShiftField()">+ Añadir Turno</button>
+                        <button type="button" class="btn-small btn-secondary" (click)="addShiftField()">+ Añadir
+                            Turno</button>
                     </div>
-                    <div *ngFor="let s of shifts; let i = index" class="shift-item-row" style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;">
-                        <input type="text" [(ngModel)]="s.name" [name]="'shift_name_' + i" placeholder="Ej: Viernes tarde" required style="flex: 2;">
+                    <div *ngFor="let s of shifts; let i = index" class="shift-item-row"
+                        style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;">
+                        <input type="text" [(ngModel)]="s.name" [name]="'shift_name_' + i"
+                            placeholder="Ej: Viernes tarde" required style="flex: 2;">
                         <input type="date" [(ngModel)]="s.date" [name]="'shift_date_' + i" required style="flex: 1;">
                         <input type="time" [(ngModel)]="s.time" [name]="'shift_time_' + i" required style="flex: 1;">
-                        <button type="button" class="btn-small" (click)="removeShiftField(i)" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);">✕</button>
+                        <button type="button" class="btn-small" (click)="removeShiftField(i)"
+                            style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);">✕</button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary w-full" style="margin-top: 10px;">Publicar convocatoria</button>
+                <button type="submit" class="btn-primary w-full" style="margin-top: 10px;">Publicar
+                    convocatoria</button>
             </form>
         </section>
 
         <section class="glass-panel admin-card">
             <h2>Gestión de Juegos (BGG)</h2>
             <div class="search-bar">
-                <input type="text" [(ngModel)]="gameSearchQuery" placeholder="Buscar en BoardGameGeek..." (keyup.enter)="onSearchGames()">
+                <input type="text" [(ngModel)]="gameSearchQuery" placeholder="Buscar en BoardGameGeek..."
+                    (keyup.enter)="onSearchGames()">
                 <button class="btn-secondary" (click)="onSearchGames()">Buscar</button>
             </div>
-            
+
             <div class="bgg-error" *ngIf="bggError">
                 ⚠️ {{bggError}}
             </div>
@@ -76,32 +84,44 @@
     <section class="glass-panel admin-card full-width" style="margin-top: 30px;">
         <div class="players-header">
             <h2>Gestión de Jugadores</h2>
-            <a class="btn-secondary btn-small" routerLink="/admin/jugadores">📊 Estadísticas y fichas</a>
-        </div>
-        
-        <div class="pending-list" *ngIf="pendingPlayers.length > 0">
-            <h3>⚠️ Pendientes de Aprobación ({{pendingPlayers.length}})</h3>
-            <div class="players-grid">
-                <div *ngFor="let p of pendingPlayers" class="player-admin-card">
-                    <div class="player-main">
-                        <strong>{{p.name}}</strong>
-                        <span class="phone">🪪 Socio: {{p.membershipId}} | 📱 {{p.phone}}</span>
-                    </div>
-                    <div class="player-extra">
-                        <small>🎮 Favoritos: {{p.favoriteGames}}</small>
-                    </div>
-                    <button class="btn-primary btn-small" (click)="onApprovePlayer(p.phone)">Aprobar Acceso</button>
-                </div>
-            </div>
         </div>
 
-        <div class="approved-list" style="margin-top: 20px;">
-            <h3>✅ Jugadores Activos</h3>
-            <div class="players-compact">
-                <a *ngFor="let p of players" class="player-tag" [class.pending-tag]="!p.isApproved" [routerLink]="['/admin/jugadores', p.id]">
-                    [{{p.membershipId}}] {{p.name}} <small *ngIf="p.isAdmin">(Admin)</small>
+        <!-- Formulario para crear nuevo jugador -->
+        <section class="glass-panel admin-card" style="margin-bottom: 20px;">
+            <h3>🔐 Alta de Nuevo Jugador</h3>
+            <form (submit)="onCreatePlayer()" class="grid-form">
+                <div class="form-group"><label>Nombre</label><input type="text" [(ngModel)]="newPlayer.name" name="name"
+                        placeholder="Juan Pérez" required /></div>
+                <div class="form-group"><label>Teléfono</label><input type="text" [(ngModel)]="newPlayer.phone"
+                        name="phone" placeholder="+34 600 123 456" required /></div>
+                <div class="form-group"><label>Número de Socio</label><input type="text"
+                        [(ngModel)]="newPlayer.membershipId" name="membershipId" placeholder="12345" required /></div>
+                <div class="form-group"><label>Juegos Favoritos (opcional)</label><input type="text"
+                        [(ngModel)]="newPlayer.favoriteGames" name="favoriteGames"
+                        placeholder="Catan, Terraforming Mars" /></div>
+                <button type="submit" class="btn-primary">Dar de Alta</button>
+            </form>
+        </section>
+
+        <!-- Buscador de jugadores -->
+        <section class="glass-panel admin-card">
+            <h3>🔎 Buscar Jugador</h3>
+            <input type="text" class="search-input" [(ngModel)]="playerSearch"
+                placeholder="Buscar por nombre o Nº de socio..." autocomplete="off" />
+            <div class="search-results" *ngIf="filteredPlayers.length > 0">
+                <a *ngFor="let p of filteredPlayers" class="search-result" [routerLink]="['/admin/jugadores', p.id]">
+                    <span class="ellipsis">{{p.name}}</span>
+                    <small>🪪 {{p.membershipId}}</small>
                 </a>
             </div>
-        </div>
+            <p class="hint" *ngIf="playerSearch && filteredPlayers.length === 0">No hay jugadores que coincidan.</p>
+        </section>
+
+        <section class="glass-panel admin-card full-width" style="margin-top: 30px;">
+            <div class="players-header">
+                <a class="btn-secondary btn-small" routerLink="/admin/jugadores">📊 Estadísticas y fichas</a>
+            </div>
+        </section>
     </section>
+
 </div>
