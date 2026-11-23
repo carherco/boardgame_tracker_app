@@ -54,11 +54,11 @@
     </div>
   </section>
 
-  <!-- LISTA DE EVENTOS -->
+  <!-- PRÓXIMAS QUEDADAS -->
   <section class="events-section">
-    <h2 class="section-title">Próximas Quedadas</h2>
+    <h2 class="section-title">Próximas quedadas</h2>
     <div class="events-grid">
-      <div *ngFor="let event of events" class="event-card glass-panel" [routerLink]="['/apuntarse/', event.shareToken]">
+      <div *ngFor="let event of upcomingEvents" class="event-card glass-panel" [routerLink]="['/apuntarse/', event.shareToken]">
         <div class="event-date-badge">
           <span class="day">{{event.date | date:'dd'}}</span>
           <span class="month">{{event.date | date:'MMM'}}</span>
@@ -71,8 +71,30 @@
         </div>
       </div>
     </div>
-    <div *ngIf="events.length === 0" class="no-events glass-panel">
+    <div *ngIf="upcomingEvents.length === 0" class="no-events glass-panel">
       No hay eventos programados. ¡Habla con un admin!
+    </div>
+  </section>
+
+  <!-- QUEDADAS PASADAS -->
+  <section class="events-section">
+    <h2 class="section-title">Quedadas pasadas</h2>
+    <div class="events-grid">
+      <div *ngFor="let event of pastEvents" class="event-card glass-panel" [routerLink]="['/apuntarse/', event.shareToken]">
+        <div class="event-date-badge">
+          <span class="day">{{event.date | date:'dd'}}</span>
+          <span class="month">{{event.date | date:'MMM'}}</span>
+        </div>
+        <div class="event-main">
+          <h3>{{event.title}}</h3>
+          <p class="location" *ngIf="event.location">📍 {{event.location.name}}</p>
+          <div class="attendees-count">👥 {{event.signups.length}} asistentes</div>
+          <div class="games-count">🎲 {{event.sessions.length}} partidas</div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="pastEvents.length === 0" class="no-events glass-panel">
+      Todavía no hay quedadas pasadas.
     </div>
   </section>
 
