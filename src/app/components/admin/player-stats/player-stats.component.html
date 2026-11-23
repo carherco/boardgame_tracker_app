@@ -74,7 +74,6 @@
           <thead>
             <tr>
               <th>Evento</th>
-              <th title="Apuntados">Apunt.</th>
               <th title="Asistentes">Asist.</th>
               <th title="Partidas">Part.</th>
               <th title="Juegos distintos">Juegos</th>
@@ -86,7 +85,6 @@
                 <a [routerLink]="['/apuntarse', e.shareToken]">{{e.title}}</a>
                 <small>{{e.date | date:'dd/MM/yyyy'}}<ng-container *ngIf="e.location"> · {{e.location}}</ng-container></small>
               </td>
-              <td>{{e.signups}}</td>
               <td>{{e.attendees}}</td>
               <td>{{e.sessions}}</td>
               <td>{{e.differentGames}}</td>

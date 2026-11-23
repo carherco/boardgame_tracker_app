@@ -35,8 +35,15 @@ export class DashboardComponent implements OnInit {
       .sort((a, b) => this.eventDateKey(b.date).localeCompare(this.eventDateKey(a.date)));
   }
 
-  checkedInCount(event: Event): number {
-    return event.signups.filter(signup => signup.checkedIn).length;
+  attendeeCount(event: Event): number {
+    const attendeeIds = new Set<number>();
+    event.signups
+      .filter(signup => signup.checkedIn)
+      .forEach(signup => attendeeIds.add(signup.player.id));
+    event.sessions
+      .flatMap(session => session.players)
+      .forEach(player => attendeeIds.add(player.id));
+    return attendeeIds.size;
   }
 
   private eventDateKey(value: string): string {

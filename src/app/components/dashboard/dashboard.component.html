@@ -88,7 +88,7 @@
         <div class="event-main">
           <h3>{{event.title}}</h3>
           <p class="location" *ngIf="event.location">📍 {{event.location.name}}</p>
-          <div class="attendees-count">👥 {{checkedInCount(event)}} asistentes</div>
+          <div class="attendees-count">👥 {{attendeeCount(event)}} asistentes</div>
           <div class="games-count">🎲 {{event.sessions.length}} partidas</div>
         </div>
       </div>
