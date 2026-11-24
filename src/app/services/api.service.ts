@@ -49,8 +49,12 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}/stats/me?phone=${phone}`);
   }
 
-  getPlayersStats(adminPhone: string): Observable<PlayersStats> {
-    return this.http.get<PlayersStats>(`${this.apiUrl}/stats/players`, { params: { admin_phone: adminPhone } });
+  getPlayersStats(adminPhone: string, locationId?: number | null): Observable<PlayersStats> {
+    const params: Record<string, string | number> = { admin_phone: adminPhone };
+    if (locationId !== null && locationId !== undefined) {
+      params['location_id'] = locationId;
+    }
+    return this.http.get<PlayersStats>(`${this.apiUrl}/stats/players`, { params });
   }
 
   getPlayerProfile(adminPhone: string, playerId: number): Observable<any> {

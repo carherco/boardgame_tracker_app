@@ -45,6 +45,13 @@
     <!-- RANKINGS -->
     <section class="glass-panel block">
       <h2>🏆 Top 20</h2>
+      <label class="location-filter">
+        Filtrar por sede
+        <select [ngModel]="selectedLocationId ?? ''" (ngModelChange)="onLocationChange($event)" aria-label="Filtrar rankings por sede">
+          <option value="">Todas las sedes</option>
+          <option *ngFor="let location of locations" [value]="location.id">{{location.name}}</option>
+        </select>
+      </label>
       <div class="tabs">
         <button *ngFor="let tab of rankingTabs" type="button" class="tab"
                 [class.active]="activeTab === tab.key" (click)="activeTab = tab.key">

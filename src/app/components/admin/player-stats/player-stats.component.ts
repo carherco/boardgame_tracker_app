@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
-import { Player, PlayerRankingEntry, PlayersStats } from '../../../models/interfaces';
+import { GameLocation, Player, PlayerRankingEntry, PlayersStats } from '../../../models/interfaces';
 
 type RankingKey = keyof PlayersStats['rankings'];
 
@@ -17,8 +17,11 @@ type RankingKey = keyof PlayersStats['rankings'];
 })
 export class PlayerStatsComponent implements OnInit {
   stats: PlayersStats | null = null;
+  locations: GameLocation[] = [];
+  selectedLocationId: number | null = null;
   loading: boolean = true;
   error: string = '';
+  private adminPhone: string | null = null;
 
   rankingTabs: { key: RankingKey, label: string, units: [string, string] }[] = [
     { key: 'events', label: 'Eventos', units: ['evento', 'eventos'] },
@@ -44,7 +47,26 @@ export class PlayerStatsComponent implements OnInit {
       return;
     }
 
-    this.api.getPlayersStats(admin.phone).subscribe({
+    this.adminPhone = admin.phone;
+    this.loadStats();
+    this.api.getLocations().subscribe({
+      next: (locations) => this.locations = locations,
+      error: () => this.locations = []
+    });
+
+    this.api.getPlayers().subscribe(data => this.players = data);
+  }
+
+  onLocationChange(locationId: string): void {
+    this.selectedLocationId = locationId ? Number(locationId) : null;
+    this.loadStats();
+  }
+
+  private loadStats(): void {
+    if (!this.adminPhone) return;
+    this.loading = true;
+    this.error = '';
+    this.api.getPlayersStats(this.adminPhone, this.selectedLocationId).subscribe({
       next: (data) => {
         this.stats = data;
         this.loading = false;
@@ -54,8 +76,6 @@ export class PlayerStatsComponent implements OnInit {
         this.loading = false;
       }
     });
-
-    this.api.getPlayers().subscribe(data => this.players = data);
   }
 
   get activeRanking(): PlayerRankingEntry[] {

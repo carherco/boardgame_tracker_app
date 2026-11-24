@@ -123,6 +123,31 @@ h2 {
   color: white;
 }
 
+.location-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 360px;
+  margin-bottom: 12px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.location-filter select {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  color: #f8fafc;
+}
+
+.location-filter select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
 .ranking {
   list-style: none;
   margin: 0;
