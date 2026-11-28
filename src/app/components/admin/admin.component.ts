@@ -17,6 +17,7 @@ import { GameLocation, Player } from '../../models/interfaces';
 export class AdminComponent implements OnInit {
   newEvent = { title: '', date: '', time: '', location_id: '' };
   locations: GameLocation[] = [];
+  selectedGameLocationId: number | null = null;
   gameSearchQuery: string = '';
   searchResults: any[] = [];
   // Player management
@@ -27,17 +28,17 @@ export class AdminComponent implements OnInit {
   shifts: { name: string, date: string, time: string }[] = [];
 
   addShiftField() {
-    this.shifts.push({ 
-      name: '', 
-      date: this.newEvent.date || '', 
-      time: this.newEvent.time || '16:00' 
+    this.shifts.push({
+      name: '',
+      date: this.newEvent.date || '',
+      time: this.newEvent.time || '16:00'
     });
   }
 
   removeShiftField(index: number) {
     this.shifts.splice(index, 1);
   }
-  
+
   constructor(
     private api: ApiService,
     private auth: AuthService,
@@ -129,9 +130,16 @@ export class AdminComponent implements OnInit {
 
   onAddGame(gameData: any) {
     this.bggError = '';
-    this.api.addGame(gameData).subscribe({
+    const admin = this.auth.getCurrentUser();
+    if (!admin) return;
+
+    this.api.addGame({
+      ...gameData,
+      admin_phone: admin.phone,
+      locationId: this.selectedGameLocationId
+    }).subscribe({
       next: () => {
-        alert('Juego añadido a la biblioteca local');
+        alert(this.selectedGameLocationId ? 'Juego asociado a la sede' : 'Juego añadido a tu colección personal');
         this.searchResults = [];
         this.gameSearchQuery = '';
       },

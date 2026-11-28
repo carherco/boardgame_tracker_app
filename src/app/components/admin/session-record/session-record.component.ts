@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../../services/api.service';
-import { Event, Game, Player } from '../../../models/interfaces';
+import { Event, Game, GameLocation, Player } from '../../../models/interfaces';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-session-record',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './session-record.component.html',
   styleUrls: ['./session-record.component.css']
 })
@@ -17,15 +19,17 @@ export class SessionRecordComponent implements OnInit {
   selectedGame: Game | null = null;
   selectedPlayerIds: number[] = [];
   selectedShiftId: number | null = null;
-  
+  locations: GameLocation[] = [];
+  selectedGameLocationId: number | null = null;
+
   showBggModal = false;
   bggResults: any[] = [];
   isSearchingBgg = false;
-  
+
   photoFiles: File[] = [];
   photoPreviews: string[] = [];
 
-  constructor(private fb: FormBuilder, private api: ApiService) {
+  constructor(private fb: FormBuilder, private api: ApiService, public auth: AuthService) {
     this.sessionForm = this.fb.group({
       gameSearch: [''],
       notes: ['']
@@ -33,6 +37,10 @@ export class SessionRecordComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.api.getLocations().subscribe({
+      next: (locations) => this.locations = locations,
+      error: () => this.locations = []
+    });
     this.api.getActiveEvent().subscribe({
       next: (event) => {
         this.activeEvent = event;
@@ -61,9 +69,14 @@ export class SessionRecordComponent implements OnInit {
   }
 
   importGame(bggGame: any) {
+    const user = this.auth.getCurrentUser();
+    if (!user) return;
+
     this.api.addGame({
       name: bggGame.name,
-      bggId: bggGame.bggId
+      bggId: bggGame.bggId,
+      phone: user.phone,
+      locationId: user.isAdmin ? this.selectedGameLocationId : null
     }).subscribe({
       next: (game) => {
         this.selectedGame = game;
@@ -92,7 +105,7 @@ export class SessionRecordComponent implements OnInit {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         this.photoFiles.push(file);
-        
+
         const reader = new FileReader();
         reader.onload = (e: any) => this.photoPreviews.push(e.target.result);
         reader.readAsDataURL(file);

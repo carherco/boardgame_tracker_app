@@ -25,7 +25,7 @@
         <span class="step-num">1</span>
         <h3>Seleccionar Juego</h3>
       </div>
-      
+
       <div class="game-selector">
         <input type="text" placeholder="Buscar juego en catálogo local..." formControlName="gameSearch" class="input-modern">
         <button type="button" class="btn-secondary" (click)="openBggSearch()">
@@ -48,10 +48,10 @@
         <span class="step-num">2</span>
         <h3>¿Quiénes han jugado?</h3>
       </div>
-      
+
       <div class="attendees-grid">
-        <div *ngFor="let signup of activeEvent.signups" 
-             class="attendee-chip" 
+        <div *ngFor="let signup of activeEvent.signups"
+             class="attendee-chip"
              [class.selected]="isSelected(signup.player.id)"
              (click)="toggleAttendee(signup.player.id)"
              [attr.title]="signup.player.name">
@@ -100,6 +100,14 @@
       <input type="text" #bggInput (keyup.enter)="searchBgg(bggInput.value)" placeholder="Nombre del juego..." class="input-modern">
       <button (click)="searchBgg(bggInput.value)" class="btn-primary">Buscar</button>
     </div>
+
+    <label class="game-location-select" *ngIf="auth.isAdmin()">
+      Guardar en
+      <select [(ngModel)]="selectedGameLocationId">
+        <option [ngValue]="null">Mi colección personal</option>
+        <option *ngFor="let location of locations" [ngValue]="location.id">{{location.name}}</option>
+      </select>
+    </label>
 
     <div class="bgg-results">
       <div *ngFor="let item of bggResults" (click)="importGame(item)" class="bgg-item">

@@ -99,7 +99,7 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/games/search?q=${query}`);
   }
 
-  addGame(game: Partial<Game>): Observable<Game> {
+  addGame(game: Partial<Game> & { phone?: string, admin_phone?: string, locationId?: number | null }): Observable<Game> {
     return this.http.post<Game>(`${this.apiUrl}/games/add`, game);
   }
 
